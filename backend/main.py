@@ -377,6 +377,8 @@ def cancel_registration(registration_id: int):
 
 # Mount /js static folder
 app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="js")
+# Mount /assets static folder
+app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
 
 @app.get("/", include_in_schema=False)
 def serve_index():
