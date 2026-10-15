@@ -1,6 +1,7 @@
 /**
  * Zenith '26 - Student Event Portal
- * Dynamic cards, live search, category filtering, event details, and registration flow.
+ * Dynamic cards, live search, category filtering, interactive campus map,
+ * fest passport, cartoon character reactions, and obsidian spatial flow.
  */
 
 const API_BASE = '/api';
@@ -8,13 +9,20 @@ const API_BASE = '/api';
 // Current filter states
 let currentCategory = 'All';
 let currentSearch = '';
+let currentVenue = '';
 let debounceTimer = null;
+let allEventsCache = [];
 
 // DOM Elements
 const eventsGrid = document.getElementById('events-grid');
 const searchInput = document.getElementById('search-input');
 const categoryButtons = document.querySelectorAll('.filter-btn');
 const statusContainer = document.getElementById('status-container');
+const venueButtons = document.querySelectorAll('.venue-node-btn');
+const resetMapFilterBtn = document.getElementById('reset-map-filter-btn');
+const passportContainer = document.getElementById('passport-container');
+const passportBadgeCount = document.getElementById('passport-badge-count');
+const greetingText = document.getElementById('greeting-text');
 
 // Modal Elements
 const eventModal = document.getElementById('event-modal');
@@ -35,7 +43,9 @@ const submitRegisterBtn = document.getElementById('submit-register-btn');
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
   fetchEvents();
+  loadUserPassport();
   setupEventListeners();
+  setupPersonalizedGreeting();
 });
 
 function setupEventListeners() {
@@ -52,15 +62,31 @@ function setupEventListeners() {
   categoryButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       categoryButtons.forEach((b) => {
-        b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm', 'shadow-indigo-200');
-        b.classList.add('bg-slate-100', 'text-slate-600');
+        b.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm', 'shadow-indigo-500/50');
+        b.classList.add('bg-white/5', 'text-slate-300', 'border', 'border-white/10');
       });
-      btn.classList.remove('bg-slate-100', 'text-slate-600');
-      btn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm', 'shadow-indigo-200');
+      btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
+      btn.classList.add('bg-indigo-600', 'text-white', 'shadow-sm', 'shadow-indigo-500/50');
 
       currentCategory = btn.dataset.category;
       fetchEvents();
     });
+  });
+
+  // Campus map venue clicks
+  venueButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      venueButtons.forEach(b => b.classList.remove('ring-2', 'ring-indigo-400', 'bg-indigo-900/40'));
+      btn.classList.add('ring-2', 'ring-indigo-400', 'bg-indigo-900/40');
+      currentVenue = btn.dataset.venue;
+      applyClientVenueFilter();
+    });
+  });
+
+  resetMapFilterBtn.addEventListener('click', () => {
+    venueButtons.forEach(b => b.classList.remove('ring-2', 'ring-indigo-400', 'bg-indigo-900/40'));
+    currentVenue = '';
+    renderEvents(allEventsCache);
   });
 
   // Modal Close
@@ -71,6 +97,13 @@ function setupEventListeners() {
 
   // Registration Form Submission
   registrationForm.addEventListener('submit', handleRegistration);
+}
+
+function setupPersonalizedGreeting() {
+  const rememberedName = localStorage.getItem('zenith_student_name');
+  if (rememberedName) {
+    greetingText.textContent = `Welcome back, ${rememberedName}! 🎈`;
+  }
 }
 
 /**
@@ -96,14 +129,30 @@ async function fetchEvents() {
     }
 
     const events = await response.json();
-    renderEvents(events);
+    allEventsCache = events;
+    if (currentVenue) {
+      applyClientVenueFilter();
+    } else {
+      renderEvents(events);
+    }
   } catch (err) {
     showError(`Error connecting to server: ${err.message}. Make sure the backend server is running.`);
   }
 }
 
+function applyClientVenueFilter() {
+  if (!currentVenue) {
+    renderEvents(allEventsCache);
+    return;
+  }
+  const filtered = allEventsCache.filter(e => 
+    e.venue.toLowerCase().includes(currentVenue.toLowerCase())
+  );
+  renderEvents(filtered);
+}
+
 /**
- * Render cards into #events-grid
+ * Render cards into #events-grid with Cartoon Mascots & Obsidian Styling
  */
 function renderEvents(events) {
   eventsGrid.innerHTML = '';
@@ -114,39 +163,42 @@ function renderEvents(events) {
     return;
   }
 
+  // Cartoon Character buddy roster
+  const cartoonBuddies = [
+    { name: "Ord (Dragon Tales)", icon: "🐲", quote: "Dragon scale power!", anim: "anim-dragon" },
+    { name: "Popeye the Sailor", icon: "💪", quote: "Strong to the finich with spinach!", anim: "anim-popeye" },
+    { name: "Oswald the Octopus", icon: "🐙", quote: "Have a calm, wonderful day!", anim: "anim-oswald" },
+    { name: "Mr. Bean & Teddy", icon: "🧸", quote: "Brilliant, absolutely brilliant!", anim: "anim-bean" },
+    { name: "Cassie (Dragon Tales)", icon: "✨", quote: "I wish with all my heart!", anim: "anim-dragon" },
+    { name: "Olive Oyl & Popeye", icon: "⚓", quote: "Ahoy there fest mates!", anim: "anim-popeye" }
+  ];
+
   events.forEach((event) => {
     const isFull = event.available_seats <= 0;
     const feeText = event.fee === 0 ? 'Free' : `₹${event.fee}`;
     const seatsBadgeClass = isFull 
-      ? 'bg-rose-100 text-rose-700 font-bold border border-rose-200' 
-      : 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold';
+      ? 'bg-rose-950/70 text-rose-300 font-bold border border-rose-500/40' 
+      : 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/40 font-semibold';
 
-    // Map fun cartoon buddy based on event category / id
-    const cartoonBuddies = [
-      { name: "Ord (Dragon Tales)", icon: "🐲", quote: "Dragon scale power!", anim: "anim-dragon" },
-      { name: "Popeye the Sailor", icon: "💪", quote: "I yam what I yam!", anim: "anim-popeye" },
-      { name: "Oswald the Octopus", icon: "🐙", quote: "Hot dog & chill!", anim: "anim-oswald" },
-      { name: "Mr. Bean & Teddy", icon: "🧸", quote: "Brilliant!", anim: "anim-bean" },
-      { name: "Cassie (Dragon Tales)", icon: "✨", quote: "I wish with all my heart!", anim: "anim-dragon" },
-      { name: "Spinach Boost", icon: "🥬", quote: "Instant victory!", anim: "anim-popeye" }
-    ];
     const buddy = cartoonBuddies[(event.id - 1) % cartoonBuddies.length];
 
     const card = document.createElement('div');
-    card.className = `card-fade-in obsidian-card rounded-2xl p-5 hover:-translate-y-1 transition duration-300 flex flex-col justify-between group`;
+    card.className = `obsidian-card rounded-2xl p-5 hover:-translate-y-1 transition duration-300 flex flex-col justify-between group`;
 
     card.innerHTML = `
       <div>
         <!-- Node Header & Cartoon Buddy -->
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="flex items-center gap-2.5">
-            <span class="text-3xl p-2 bg-white/5 rounded-xl border border-white/10 group-hover:scale-110 transition ${buddy.anim}" title="${buddy.name}: ${buddy.quote}">${event.icon || '⚡'}</span>
+            <span class="text-3xl p-2.5 bg-white/5 rounded-xl border border-white/10 group-hover:scale-110 transition ${buddy.anim}" title="${buddy.name}: ${buddy.quote}">
+              ${event.icon || '⚡'}
+            </span>
             <div>
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/70 px-2 py-0.5 rounded-full border border-indigo-500/30">
+                <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded-full border border-indigo-500/30">
                   ${event.category}
                 </span>
-                <span class="text-[10px] bg-white/5 text-purple-300 px-1.5 py-0.5 rounded-md border border-white/10 inline-flex items-center gap-1 cursor-default ${buddy.anim}" title="${buddy.quote}">
+                <span class="text-[10px] bg-white/5 text-purple-300 px-1.5 py-0.5 rounded-md border border-white/10 inline-flex items-center gap-1 cursor-default" title="${buddy.quote}">
                   <span>${buddy.icon}</span> ${buddy.name.split(' ')[0]}
                 </span>
               </div>
@@ -172,10 +224,10 @@ function renderEvents(events) {
           </div>
           <div class="flex items-center justify-between">
             <span class="text-slate-400">📍 Venue:</span>
-            <span class="font-medium text-slate-200 truncate max-w-[170px]">${event.venue}</span>
+            <span class="font-medium text-indigo-300 truncate max-w-[170px]">${event.venue}</span>
           </div>
           <div class="flex items-center justify-between pt-1 border-t border-white/10">
-            <span class="text-slate-400">🎟️ Available Seats:</span>
+            <span class="text-slate-400">🎟️ Seats Left:</span>
             <span class="px-2 py-0.5 rounded text-[11px] ${seatsBadgeClass}">
               ${isFull ? '0 Seats Left' : `${event.available_seats} / ${event.capacity}`}
             </span>
@@ -208,6 +260,14 @@ window.openEventDetails = async function(eventId) {
   registrationForm.reset();
   hideInlineErrors();
 
+  const savedName = localStorage.getItem('zenith_student_name');
+  const savedRoll = localStorage.getItem('zenith_roll_number');
+  const savedEmail = localStorage.getItem('zenith_email');
+
+  if (savedName) document.getElementById('reg-student-name').value = savedName;
+  if (savedRoll) document.getElementById('reg-roll-number').value = savedRoll;
+  if (savedEmail) document.getElementById('reg-email').value = savedEmail;
+
   try {
     const res = await fetch(`${API_BASE}/events/${eventId}`);
     if (!res.ok) throw new Error('Could not load event details');
@@ -222,19 +282,18 @@ window.openEventDetails = async function(eventId) {
     modalEventFee.textContent = event.fee === 0 ? 'Free' : `₹${event.fee}`;
     
     if (event.available_seats <= 0) {
-      modalEventSeats.innerHTML = `<span class="text-rose-600 font-bold">FULL (0 / ${event.capacity})</span>`;
+      modalEventSeats.innerHTML = `<span class="text-rose-400 font-bold">FULL (0 / ${event.capacity})</span>`;
       submitRegisterBtn.disabled = true;
       submitRegisterBtn.classList.add('opacity-50', 'cursor-not-allowed');
-      submitRegisterBtn.innerHTML = '<span>Event is Full</span>';
+      submitRegisterBtn.innerHTML = '<span>Event Node is Full</span>';
     } else {
-      modalEventSeats.innerHTML = `<span class="text-indigo-600 font-bold">${event.available_seats} of ${event.capacity} left</span>`;
+      modalEventSeats.innerHTML = `<span class="text-indigo-400 font-bold">${event.available_seats} of ${event.capacity} left</span>`;
       submitRegisterBtn.disabled = false;
       submitRegisterBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-      submitRegisterBtn.innerHTML = '<span>Confirm Registration</span>';
+      submitRegisterBtn.innerHTML = '<span>Confirm Registration & Collect Stamp 🎉</span>';
     }
 
     modalEventDesc.textContent = event.description || 'No additional details provided.';
-
     eventModal.classList.remove('hidden');
   } catch (err) {
     alert(err.message);
@@ -276,9 +335,15 @@ async function handleRegistration(e) {
 
   if (hasError) return;
 
+  // Save for personalized returning experience
+  localStorage.setItem('zenith_student_name', studentName);
+  localStorage.setItem('zenith_roll_number', rollNumber);
+  localStorage.setItem('zenith_email', email);
+  setupPersonalizedGreeting();
+
   // Submit to POST /api/events/{event_id}/register
   submitRegisterBtn.disabled = true;
-  submitRegisterBtn.innerHTML = `<span class="animate-spin mr-1">🌀</span> Registering...`;
+  submitRegisterBtn.innerHTML = `<span class="animate-spin mr-1">🌀</span> Stamping Passport...`;
 
   try {
     const res = await fetch(`${API_BASE}/events/${eventId}/register`, {
@@ -295,22 +360,22 @@ async function handleRegistration(e) {
     const data = await res.json();
 
     if (res.status === 201) {
-      // Success
+      // Success celebration with cartoon sound/vibe reaction
       showModalAlert(
-        `🎉 Registered successfully for ${modalEventTitle.textContent}! Registration ID: #${data.id}`,
+        `🎉 Stamp Earned! Registered for ${modalEventTitle.textContent}! Pass ID: #${data.id}`,
         'success'
       );
       registrationForm.reset();
 
-      // Refresh event count live
+      // Refresh event count & passport
       await fetchEvents();
+      await loadUserPassport();
 
       // Close modal automatically after 1.8 seconds
       setTimeout(() => {
         closeModal();
       }, 1800);
     } else {
-      // 400 or 409 or other server error
       const errorMsg = data.detail || 'Registration failed. Please check your details.';
       showModalAlert(`⚠️ ${errorMsg}`, 'error');
     }
@@ -318,19 +383,77 @@ async function handleRegistration(e) {
     showModalAlert(`⚠️ Network error: ${err.message}`, 'error');
   } finally {
     submitRegisterBtn.disabled = false;
-    submitRegisterBtn.innerHTML = '<span>Confirm Registration</span>';
+    submitRegisterBtn.innerHTML = '<span>Confirm Registration & Collect Stamp 🎉</span>';
+  }
+}
+
+/**
+ * Load Fest Passport from GET /api/registrations
+ */
+async function loadUserPassport() {
+  const email = localStorage.getItem('zenith_email');
+  try {
+    const res = await fetch(`${API_BASE}/registrations`);
+    if (!res.ok) return;
+    const registrations = await res.json();
+
+    // If user has registered before, match by email or show recent registrations
+    const myRegistrations = email 
+      ? registrations.filter(r => r.email.toLowerCase() === email.toLowerCase())
+      : registrations.slice(0, 3); // preview if no email yet
+
+    passportBadgeCount.textContent = `${myRegistrations.length} Badges Earned`;
+
+    if (myRegistrations.length === 0) {
+      passportContainer.innerHTML = `
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center text-slate-400 col-span-full py-10">
+          <span class="text-3xl block mb-2 anim-float">🐙</span>
+          <p class="text-sm font-bold text-slate-300">Your Fest Passport is ready for adventure!</p>
+          <p class="text-xs text-slate-500 mt-1">Register for any event above to collect verified digital passport stamps.</p>
+        </div>
+      `;
+      return;
+    }
+
+    passportContainer.innerHTML = '';
+    myRegistrations.forEach((reg) => {
+      const stampCard = document.createElement('div');
+      stampCard.className = 'obsidian-card p-4 rounded-2xl border border-indigo-500/30 flex items-center justify-between gap-3 group relative overflow-hidden';
+      stampCard.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-pink-500/20 border border-white/10 flex items-center justify-center text-2xl anim-stamp">
+            🎖️
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase text-indigo-400 font-bold">Verified Registration</span>
+            <h4 class="font-bold text-white text-sm line-clamp-1">${reg.event_title}</h4>
+            <p class="text-[11px] text-slate-400 font-mono">${reg.student_name} (${reg.roll_number})</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
+            PASS #${reg.id}
+          </span>
+          <span class="block text-[10px] text-slate-500 mt-1">Confirmed</span>
+        </div>
+      `;
+      passportContainer.appendChild(stampCard);
+    });
+
+  } catch (err) {
+    console.warn("Could not load passport:", err);
   }
 }
 
 // Helpers for inline alerts and UI states
 function showModalAlert(message, type) {
   modalAlert.textContent = message;
-  modalAlert.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200', 'bg-rose-50', 'text-rose-800', 'border-rose-200');
+  modalAlert.classList.remove('hidden', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-500/40', 'bg-rose-950/80', 'text-rose-300', 'border-rose-500/40');
 
   if (type === 'success') {
-    modalAlert.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+    modalAlert.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border', 'border-emerald-500/40', 'anim-stamp');
   } else {
-    modalAlert.classList.add('bg-rose-50', 'text-rose-800', 'border', 'border-rose-200');
+    modalAlert.classList.add('bg-rose-950/80', 'text-rose-300', 'border', 'border-rose-500/40');
   }
 }
 
@@ -346,22 +469,23 @@ function hideInlineErrors() {
 }
 
 function showLoading() {
-  statusContainer.className = 'flex items-center justify-center py-16 text-slate-500';
+  statusContainer.className = 'flex items-center justify-center py-16 text-slate-400';
   statusContainer.innerHTML = `
     <div class="flex flex-col items-center gap-3">
-      <div class="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-sm font-medium">Loading fest events...</p>
+      <div class="text-4xl anim-dragon">🐲</div>
+      <div class="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm font-medium">Connecting to fest knowledge canvas...</p>
     </div>
   `;
   statusContainer.classList.remove('hidden');
 }
 
 function showError(msg) {
-  statusContainer.className = 'p-6 bg-rose-50 border border-rose-200 rounded-2xl text-center text-rose-700';
+  statusContainer.className = 'p-6 bg-rose-950/50 border border-rose-500/30 rounded-2xl text-center text-rose-300';
   statusContainer.innerHTML = `
-    <div class="text-2xl mb-2">⚠️</div>
-    <h4 class="font-bold text-sm mb-1">Failed to load events</h4>
-    <p class="text-xs text-rose-600">${msg}</p>
+    <div class="text-3xl mb-2 anim-bean">🧸</div>
+    <h4 class="font-bold text-sm mb-1">Canvas Connection Failed</h4>
+    <p class="text-xs text-rose-400">${msg}</p>
     <button onclick="fetchEvents()" class="mt-3 px-4 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-semibold hover:bg-rose-700">Try Again</button>
   `;
   statusContainer.classList.remove('hidden');
@@ -369,11 +493,11 @@ function showError(msg) {
 }
 
 function showEmpty() {
-  statusContainer.className = 'py-16 text-center text-slate-500 bg-white border border-slate-200/80 rounded-2xl';
+  statusContainer.className = 'py-16 text-center text-slate-400 obsidian-card rounded-2xl';
   statusContainer.innerHTML = `
-    <div class="text-4xl mb-2">🔍</div>
-    <h4 class="font-bold text-slate-800 text-base mb-1">No events match your criteria</h4>
-    <p class="text-xs text-slate-500">Try adjusting your search query or selecting a different category filter.</p>
+    <div class="text-4xl mb-2 anim-oswald">🐙</div>
+    <h4 class="font-bold text-white text-base mb-1">No event nodes match your criteria</h4>
+    <p class="text-xs text-slate-400">Try adjusting your search query, selecting another category, or resetting the campus map.</p>
   `;
   statusContainer.classList.remove('hidden');
 }

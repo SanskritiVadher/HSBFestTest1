@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zenith '26 — College Fest Management Portal</title>
+  <title>Zenith '26 — College Fest Spatial Portal</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%220%22%20100%20100><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-  <!-- Tailwind CSS via Play CDN (for development/classroom workshop; production would use compiled CSS) -->
+  <!-- Tailwind CSS via Play CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -20,171 +20,310 @@
               700: '#4338ca',
               900: '#312e81',
             },
-            accent: '#f43f5e'
+            canvas: '#090d16',
           }
         }
       }
     }
   </script>
   <style>
-    /* Obsidian Graph Canvas & Glow */
+    /* Obsidian Graph Spatial Canvas */
     body {
-      background-color: #0b0f19;
+      background-color: #080c14;
       background-image: 
-        radial-gradient(circle at 20% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 80% 85%, rgba(236, 72, 153, 0.10) 0%, transparent 40%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+        radial-gradient(circle at 18% 18%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 82% 82%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
       color: #e2e8f0;
+      overflow-x: hidden;
     }
 
     .obsidian-card {
-      background: rgba(17, 24, 39, 0.78);
+      background: rgba(15, 23, 42, 0.78);
       backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.5), 0 0 16px rgba(99, 102, 241, 0.06);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .obsidian-card:hover {
-      border-color: rgba(129, 140, 248, 0.45);
-      box-shadow: 0 10px 30px -4px rgba(99, 102, 241, 0.22), 0 0 20px rgba(168, 85, 247, 0.18);
+      border-color: rgba(129, 140, 248, 0.4);
+      box-shadow: 0 12px 36px -4px rgba(99, 102, 241, 0.25), 0 0 24px rgba(168, 85, 247, 0.18);
       transform: translateY(-4px) scale(1.01);
     }
 
-    .card-fade-in {
-      animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* Node graph interactive link pills */
+    .node-hub-card {
+      background: radial-gradient(circle at top left, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.3s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(14px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .node-hub-card:hover {
+      border-color: #818cf8;
+      box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
+      transform: scale(1.03);
     }
 
-    /* Cartoon Float & Wiggle Animations */
+    /* SVG Connecting Line Animations */
+    .pulse-line {
+      stroke-dasharray: 6;
+      animation: dash 18s linear infinite;
+    }
+    @keyframes dash {
+      to { stroke-dashoffset: -100; }
+    }
+
+    /* Cartoon Character Animation Keyframes */
     @keyframes floaty {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-7px) rotate(2deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
     }
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-6deg) scale(1.08); }
-      75% { transform: rotate(6deg) scale(1.08); }
-    }
-    @keyframes dragonSoar {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      30% { transform: translate(6px, -10px) rotate(4deg); }
-      70% { transform: translate(-6px, -5px) rotate(-3deg); }
+    @keyframes dragonTalesGlide {
+      0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      25% { transform: translate(6px, -12px) scale(1.04) rotate(4deg); }
+      75% { transform: translate(-6px, -6px) scale(0.98) rotate(-3deg); }
     }
     @keyframes popeyeFlex {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.22) rotate(-5deg); }
+      50% { transform: scale(1.22) rotate(-8deg); }
     }
     @keyframes oswaldSquish {
       0%, 100% { transform: scale(1, 1); }
-      50% { transform: scale(1.15, 0.88); }
+      40% { transform: scale(1.18, 0.82); }
+      80% { transform: scale(0.92, 1.12); }
     }
     @keyframes mrBeanBlink {
-      0%, 90%, 100% { transform: scale(1); }
-      95% { transform: scale(1.1, 0.8) rotate(10deg); }
+      0%, 85%, 100% { transform: scale(1) rotate(0deg); }
+      90% { transform: scale(1.12, 0.88) rotate(12deg); }
+      95% { transform: scale(0.92, 1.08) rotate(-8deg); }
+    }
+    @keyframes stampBadge {
+      0% { transform: scale(2) rotate(-25deg); opacity: 0; }
+      70% { transform: scale(0.9) rotate(5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-30px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(120px) rotate(360deg); opacity: 0; }
     }
 
-    .anim-float { animation: floaty 4s ease-in-out infinite; }
-    .anim-dragon { animation: dragonSoar 5s ease-in-out infinite; }
-    .anim-popeye:hover { animation: popeyeFlex 0.6s ease-in-out infinite; }
-    .anim-oswald { animation: oswaldSquish 3s ease-in-out infinite; }
-    .anim-bean:hover { animation: mrBeanBlink 1.2s ease-in-out infinite; }
-    .anim-wiggle:hover { animation: wiggle 0.5s ease-in-out; }
+    .anim-float { animation: floaty 4.5s ease-in-out infinite; }
+    .anim-dragon { animation: dragonTalesGlide 5s ease-in-out infinite; }
+    .anim-popeye { animation: popeyeFlex 1.4s ease-in-out infinite; }
+    .anim-oswald { animation: oswaldSquish 3.5s ease-in-out infinite; }
+    .anim-bean { animation: mrBeanBlink 2.8s ease-in-out infinite; }
+    .anim-stamp { animation: stampBadge 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-    /* Custom Obsidian Scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #0b0f19; }
-    ::-webkit-scrollbar-thumb { background: #273142; border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #4338ca; }
+    ::-webkit-scrollbar-track { background: #080c14; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- Top Navigation Bar (Obsidian Glass) -->
-  <header class="sticky top-0 z-40 bg-[#0d121f]/85 backdrop-blur-md border-b border-white/10">
+  <header class="sticky top-0 z-40 bg-[#090d16]/85 backdrop-blur-md border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <span class="text-2xl filter drop-shadow anim-dragon cursor-pointer" title="Ord & Cassie say hi!">🐉</span>
+        <span class="text-2xl filter drop-shadow anim-dragon cursor-pointer" title="I wish, I wish with all my heart!">🐲</span>
         <a href="/" class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-1.5">
           <span class="tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">ZENITH</span>
           <span class="text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded-lg text-lg border border-indigo-500/30 font-mono">'26</span>
         </a>
       </div>
 
-      <div class="flex items-center gap-2 sm:gap-4">
-        <!-- Cartoon Fun Mascot Pills -->
-        <div class="hidden md:flex items-center gap-3 text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300">
-          <span class="anim-dragon cursor-pointer" title="Dragon Tales: I wish, I wish with all my heart!">🐲 Ord & Cassie</span>
-          <span class="text-white/20">•</span>
-          <span class="anim-popeye cursor-pointer" title="Popeye: Strong to the finich!">💪 Popeye</span>
-          <span class="text-white/20">•</span>
-          <span class="anim-oswald cursor-pointer" title="Oswald: Have a calm, wonderful day!">🐙 Oswald</span>
-          <span class="text-white/20">•</span>
-          <span class="anim-bean cursor-pointer" title="Mr. Bean & Teddy: Cheers!">🧸 Mr. Bean</span>
-        </div>
+      <!-- Quick Jump Hub Nodes -->
+      <nav class="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 p-1 rounded-xl text-xs font-semibold text-slate-300">
+        <a href="#events-section" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-white transition flex items-center gap-1.5">
+          <span>⚡</span> Event Nodes
+        </a>
+        <a href="#canvas-map-section" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-white transition flex items-center gap-1.5">
+          <span>🗺️</span> Campus Map
+        </a>
+        <a href="#passport-section" class="px-3 py-1.5 rounded-lg hover:bg-white/10 hover:text-white transition flex items-center gap-1.5">
+          <span>🎟️</span> Fest Passport
+        </a>
+        <a href="/admin.html" class="px-3 py-1.5 rounded-lg text-indigo-400 hover:bg-indigo-500/10 hover:text-indigo-300 transition flex items-center gap-1.5 border border-transparent hover:border-indigo-500/20">
+          <span>📊</span> Admin Node
+        </a>
+      </nav>
 
-        <nav class="flex items-center gap-2">
-          <a href="/" class="text-sm font-semibold text-indigo-400 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 transition-colors">
-            Graph / Events
-          </a>
-          <a href="/admin.html" class="text-sm font-semibold text-slate-300 hover:text-indigo-300 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors flex items-center gap-1.5 border border-transparent hover:border-white/10">
-            <span>Admin</span>
-            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-mono border border-indigo-500/30">Dashboard</span>
-          </a>
-        </nav>
+      <!-- Mascot Greeting Pill -->
+      <div class="flex items-center gap-3">
+        <div id="greeting-pill" class="flex items-center gap-2 bg-indigo-950/60 border border-indigo-500/30 px-3 py-1.5 rounded-full text-xs text-indigo-200">
+          <span class="anim-bean text-base">🧸</span>
+          <span id="greeting-text">Welcome, Fest Explorer!</span>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section with Cartoon Vibes & Obsidian Flow Canvas -->
-  <section class="relative overflow-hidden bg-gradient-to-b from-[#111827] via-[#0f172a] to-[#0b0f19] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-white/5">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(99,102,241,0.18),transparent_60%)] pointer-events-none"></div>
-    <div class="max-w-4xl mx-auto text-center relative z-10">
+  <!-- Hero & Obsidian Spatial Node Canvas Hub -->
+  <section class="relative overflow-hidden pt-8 pb-14 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+    <div class="max-w-6xl mx-auto text-center relative z-10">
       
-      <!-- Cartoon Interactive Banner -->
-      <div class="inline-flex flex-wrap items-center justify-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-white/5 backdrop-blur-md border border-white/15 text-indigo-200 mb-5 shadow-lg">
-        <span class="anim-dragon inline-block">🐉</span>
-        <span>Dragon Tales Magic</span>
-        <span class="text-white/30">•</span>
-        <span class="anim-popeye inline-block">⚓</span>
-        <span>Popeye Stamina</span>
-        <span class="text-white/30">•</span>
-        <span class="anim-oswald inline-block">🐙</span>
-        <span>Oswald Vibes</span>
-        <span class="text-white/30">•</span>
-        <span class="anim-bean inline-block">🚗</span>
-        <span>Mr. Bean's Fest Odyssey</span>
+      <!-- Nostalgic Cartoon Mascot Ribbon -->
+      <div class="inline-flex flex-wrap items-center justify-center gap-2.5 px-4 py-1.5 rounded-full text-xs font-semibold bg-white/5 backdrop-blur-md border border-white/15 text-indigo-200 mb-6 shadow-xl">
+        <span class="anim-dragon inline-block text-base">🐲</span>
+        <span>Dragon Tales Wonder</span>
+        <span class="text-white/20">•</span>
+        <span class="anim-popeye inline-block text-base">💪</span>
+        <span>Popeye Spinach Power</span>
+        <span class="text-white/20">•</span>
+        <span class="anim-oswald inline-block text-base">🐙</span>
+        <span>Oswald Chill</span>
+        <span class="text-white/20">•</span>
+        <span class="anim-bean inline-block text-base">🧸</span>
+        <span>Mr. Bean's Festive Shenanigans</span>
       </div>
 
-      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-        Explore <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-400 to-indigo-300">Zenith '26</span> Graph Flow
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white">
+        Navigate the <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-400 to-indigo-300">Zenith '26</span> Knowledge Canvas
       </h1>
       <p class="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal">
-        An Obsidian-inspired node canvas of 14 high-voltage fest events. Channel your Popeye energy, Dragon Tales spirit, and Oswald chill!
+        A connected spatial canvas of competitions, workshops, campus venues, and student passports.
       </p>
 
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm text-indigo-200 font-medium">
-        <div class="flex items-center gap-2 bg-white/5 px-3.5 py-1.5 rounded-xl backdrop-blur-sm border border-white/10">
-          <span>📅</span> <strong>November 14 – 15, 2026</strong>
-        </div>
-        <div class="flex items-center gap-2 bg-white/5 px-3.5 py-1.5 rounded-xl backdrop-blur-sm border border-white/10">
-          <span>📍</span> <strong>Campus Grounds & Auditoriums</strong>
-        </div>
-        <div class="flex items-center gap-2 bg-white/5 px-3.5 py-1.5 rounded-xl backdrop-blur-sm border border-white/10">
-          <span class="anim-float">✨</span> <strong>14 Interactive Nodes</strong>
+      <!-- Obsidian Connected Nodes Visual Hub (Interactive Spatial Jump) -->
+      <div class="mt-10 relative">
+        <!-- Background SVG Connections between nodes -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none hidden md:block opacity-40" viewBox="0 0 1000 180" fill="none">
+          <path d="M 180 90 Q 340 20 500 90 T 820 90" stroke="url(#node-grad)" stroke-width="2.5" class="pulse-line" />
+          <path d="M 500 90 L 500 160" stroke="rgba(129, 140, 248, 0.4)" stroke-width="2" stroke-dasharray="4" />
+          <defs>
+            <linearGradient id="node-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#818cf8" />
+              <stop offset="50%" stop-color="#f43f5e" />
+              <stop offset="100%" stop-color="#34d399" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto relative z-10">
+          <!-- Node 1: Events -->
+          <a href="#events-section" class="node-hub-card p-4 rounded-2xl flex flex-col items-center gap-2 group cursor-pointer text-left">
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-2xl group-hover:scale-110 transition anim-float">
+              ⚡
+            </div>
+            <div class="text-center">
+              <span class="text-xs uppercase font-mono tracking-wider text-indigo-400 font-bold">Node 01</span>
+              <h4 class="text-sm font-bold text-white group-hover:text-indigo-300 transition">14 Seed Events</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Explore tech, cultural, esports</p>
+            </div>
+          </a>
+
+          <!-- Node 2: Campus Map -->
+          <a href="#canvas-map-section" class="node-hub-card p-4 rounded-2xl flex flex-col items-center gap-2 group cursor-pointer text-left">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl group-hover:scale-110 transition anim-dragon">
+              🗺️
+            </div>
+            <div class="text-center">
+              <span class="text-xs uppercase font-mono tracking-wider text-emerald-400 font-bold">Node 02</span>
+              <h4 class="text-sm font-bold text-white group-hover:text-emerald-300 transition">Interactive Map</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Clickable campus spots</p>
+            </div>
+          </a>
+
+          <!-- Node 3: Fest Passport -->
+          <a href="#passport-section" class="node-hub-card p-4 rounded-2xl flex flex-col items-center gap-2 group cursor-pointer text-left">
+            <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-2xl group-hover:scale-110 transition anim-bean">
+              🎟️
+            </div>
+            <div class="text-center">
+              <span class="text-xs uppercase font-mono tracking-wider text-rose-400 font-bold">Node 03</span>
+              <h4 class="text-sm font-bold text-white group-hover:text-rose-300 transition">Fest Passport</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Badges & registered flow</p>
+            </div>
+          </a>
+
+          <!-- Node 4: Admin Node -->
+          <a href="/admin.html" class="node-hub-card p-4 rounded-2xl flex flex-col items-center gap-2 group cursor-pointer text-left">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-2xl group-hover:scale-110 transition anim-popeye">
+              📊
+            </div>
+            <div class="text-center">
+              <span class="text-xs uppercase font-mono tracking-wider text-purple-400 font-bold">Node 04</span>
+              <h4 class="text-sm font-bold text-white group-hover:text-purple-300 transition">Coordinator Hub</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Live stats & capacity</p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Main Content: Obsidian Search, Category Nodes, and Cards Grid -->
-  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-    <!-- Search & Filter Controls (Obsidian Card Style) -->
-    <div class="obsidian-card p-4 sm:p-6 rounded-2xl mb-8 space-y-4">
+  <!-- Main Content Space -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-12">
+    
+    <!-- 1. Interactive Campus Map Node Section -->
+    <section id="canvas-map-section" class="obsidian-card p-6 rounded-3xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-white/10 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🗺️</span>
+            <h3 class="text-lg font-bold text-white tracking-tight">Interactive Campus Spatial Map</h3>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">Click any campus location node to filter events taking place there.</p>
+        </div>
+        <button id="reset-map-filter-btn" class="self-start sm:self-auto text-xs px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition">
+          Show All Venues
+        </button>
+      </div>
+
+      <!-- Stylized Vector Campus Map Canvas -->
+      <div class="relative bg-slate-950/80 rounded-2xl border border-white/10 p-4 sm:p-6 overflow-hidden">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 relative z-10">
+          <!-- Venue 1: Main Auditorium -->
+          <button data-venue="Main Auditorium" class="venue-node-btn p-3 rounded-xl bg-white/5 hover:bg-indigo-600/20 border border-white/10 hover:border-indigo-500/50 text-left transition group">
+            <span class="text-xl block mb-1 anim-float">🏛️</span>
+            <span class="text-xs font-bold text-white group-hover:text-indigo-300 block">Main Auditorium</span>
+            <span class="text-[10px] text-slate-400">Code Sprint, Opening</span>
+          </button>
+
+          <!-- Venue 2: Open Air Theatre -->
+          <button data-venue="Open Air Theatre" class="venue-node-btn p-3 rounded-xl bg-white/5 hover:bg-pink-600/20 border border-white/10 hover:border-pink-500/50 text-left transition group">
+            <span class="text-xl block mb-1 anim-dragon">🎪</span>
+            <span class="text-xs font-bold text-white group-hover:text-pink-300 block">Open Air Theatre</span>
+            <span class="text-[10px] text-slate-400">Battle of Bands, Dance</span>
+          </button>
+
+          <!-- Venue 3: Computer Lab 1 -->
+          <button data-venue="Computer Lab 1" class="venue-node-btn p-3 rounded-xl bg-white/5 hover:bg-cyan-600/20 border border-white/10 hover:border-cyan-500/50 text-left transition group">
+            <span class="text-xl block mb-1 anim-oswald">💻</span>
+            <span class="text-xs font-bold text-white group-hover:text-cyan-300 block">Computer Lab 1</span>
+            <span class="text-[10px] text-slate-400">Web Rumble, Vibe Code</span>
+          </button>
+
+          <!-- Venue 4: Sports Ground -->
+          <button data-venue="Sports Ground" class="venue-node-btn p-3 rounded-xl bg-white/5 hover:bg-emerald-600/20 border border-white/10 hover:border-emerald-500/50 text-left transition group">
+            <span class="text-xl block mb-1 anim-popeye">⚽</span>
+            <span class="text-xs font-bold text-white group-hover:text-emerald-300 block">Sports Ground</span>
+            <span class="text-[10px] text-slate-400">5-a-Side Football</span>
+          </button>
+
+          <!-- Venue 5: Gaming Arena -->
+          <button data-venue="Gaming Arena" class="venue-node-btn p-3 rounded-xl bg-white/5 hover:bg-purple-600/20 border border-white/10 hover:border-purple-500/50 text-left transition group">
+            <span class="text-xl block mb-1 anim-bean">🎮</span>
+            <span class="text-xs font-bold text-white group-hover:text-purple-300 block">Gaming Arena</span>
+            <span class="text-[10px] text-slate-400">Valorant Showdown</span>
+          </button>
+
+          <!-- Venue 6: Main Stage & Lawn -->
+          <button data-venue="Main Stage" class="venue-node-btn p-3 rounded-xl bg-white/5 hover:bg-amber-600/20 border border-white/10 hover:border-amber-500/50 text-left transition group">
+            <span class="text-xl block mb-1 anim-float">✨</span>
+            <span class="text-xs font-bold text-white group-hover:text-amber-300 block">Main Stage / Lawn</span>
+            <span class="text-[10px] text-slate-400">Fashion Fusion, Open Mic</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Events Search & Filter Controls -->
+    <section id="events-section" class="obsidian-card p-4 sm:p-6 rounded-3xl space-y-4">
       <div class="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
         <!-- Search Input -->
         <div class="relative flex-1 max-w-md">
@@ -195,55 +334,82 @@
             type="text" 
             id="search-input" 
             placeholder="Search events by title..." 
-            class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-sm outline-none transition"
+            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-sm text-white placeholder-slate-500 outline-none transition"
           />
         </div>
 
-        <!-- Category Filter Pills -->
+        <!-- Category Filter Pills with Cartoon Badges -->
         <div id="category-filters" class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <button data-category="All" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-indigo-600 text-white shadow-sm shadow-indigo-200">
-            All
+          <button data-category="All" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-indigo-600 text-white shadow-sm shadow-indigo-500/50">
+            All Nodes
           </button>
-          <button data-category="Technical" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <button data-category="Technical" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10">
             💻 Technical
           </button>
-          <button data-category="Cultural" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <button data-category="Cultural" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10">
             🎭 Cultural
           </button>
-          <button data-category="Sports" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <button data-category="Sports" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10">
             ⚽ Sports
           </button>
-          <button data-category="Gaming" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <button data-category="Gaming" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10">
             🎮 Gaming
           </button>
-          <button data-category="Workshop" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+          <button data-category="Workshop" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10">
             📐 Workshop
           </button>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Status Messages (Loading / Error / Empty States) -->
     <div id="status-container" class="hidden mb-8"></div>
 
-    <!-- Events Grid -->
+    <!-- Events Node Grid -->
     <div id="events-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Cards rendered dynamically by js/app.js -->
     </div>
+
+    <!-- 3. Fest Passport & My Journey Section -->
+    <section id="passport-section" class="obsidian-card p-6 sm:p-8 rounded-3xl relative overflow-hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5 mb-6">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-2xl anim-bean">🎟️</span>
+            <h3 class="text-xl font-black text-white tracking-tight">Student Fest Passport & Journey</h3>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Collect verified attendance stamps for every registered fest node!</p>
+        </div>
+        <div class="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-xl border border-indigo-500/30 flex items-center gap-2">
+          <span>🏅</span> <strong id="passport-badge-count">0 Badges Earned</strong>
+        </div>
+      </div>
+
+      <!-- Passport Grid / Stamp Books -->
+      <div id="passport-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically by app.js based on registrations -->
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 text-center text-slate-400 col-span-full py-10">
+          <span class="text-3xl block mb-2 anim-float">🐙</span>
+          <p class="text-sm font-bold text-slate-300">Your Fest Passport is waiting for stamps!</p>
+          <p class="text-xs text-slate-500 mt-1">Register for events above, and your official collector stamps will be stamped here automatically.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Event Detail & Registration Modal -->
-  <div id="event-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col transform transition-all">
+  <!-- Event Detail & Registration Modal (Obsidian Spatial Dialog) -->
+  <div id="event-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0f172a] rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-white/20 max-h-[92vh] flex flex-col transform transition-all text-white">
       <!-- Modal Header -->
-      <div class="p-6 bg-gradient-to-r from-indigo-900 to-indigo-800 text-white relative">
-        <button id="close-modal-btn" class="absolute top-5 right-5 text-indigo-200 hover:text-white text-xl p-1 rounded-full hover:bg-white/10 transition">
+      <div class="p-6 bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white relative border-b border-white/10">
+        <button id="close-modal-btn" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl p-1 rounded-full hover:bg-white/10 transition">
           ✕
         </button>
         <div class="flex items-center gap-3">
-          <span id="modal-event-icon" class="text-4xl p-2 bg-white/10 rounded-2xl backdrop-blur-md">⚡</span>
+          <span id="modal-event-icon" class="text-4xl p-2.5 bg-white/10 rounded-2xl backdrop-blur-md border border-white/15 anim-dragon">⚡</span>
           <div>
-            <span id="modal-event-category" class="inline-block text-[11px] font-bold uppercase tracking-wider bg-white/20 text-indigo-100 px-2 py-0.5 rounded-md mb-1">
+            <span id="modal-event-category" class="inline-block text-[10px] font-bold uppercase tracking-wider bg-indigo-500/30 text-indigo-200 px-2.5 py-0.5 rounded-md mb-1 border border-indigo-500/40">
               Category
             </span>
             <h3 id="modal-event-title" class="text-xl sm:text-2xl font-bold leading-tight">Event Title</h3>
@@ -252,41 +418,44 @@
       </div>
 
       <!-- Modal Body -->
-      <div class="p-6 overflow-y-auto space-y-6 flex-1">
+      <div class="p-6 overflow-y-auto space-y-6 flex-1 text-slate-300">
         <!-- Event Meta Info -->
-        <div class="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-slate-50 p-4 rounded-2xl border border-slate-100">
+        <div class="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-white/5 p-4 rounded-2xl border border-white/10">
           <div>
             <span class="text-slate-400 block font-medium">Date & Time</span>
-            <span id="modal-event-datetime" class="font-semibold text-slate-800">14 Nov, 10:00 AM</span>
+            <span id="modal-event-datetime" class="font-semibold text-white">14 Nov, 10:00 AM</span>
           </div>
           <div>
-            <span class="text-slate-400 block font-medium">Venue</span>
-            <span id="modal-event-venue" class="font-semibold text-slate-800">Main Auditorium</span>
+            <span class="text-slate-400 block font-medium">Campus Venue</span>
+            <span id="modal-event-venue" class="font-semibold text-indigo-300">Main Auditorium</span>
           </div>
           <div>
             <span class="text-slate-400 block font-medium">Entry Fee</span>
-            <span id="modal-event-fee" class="font-semibold text-emerald-600">Free</span>
+            <span id="modal-event-fee" class="font-semibold text-emerald-400">Free</span>
           </div>
           <div>
-            <span class="text-slate-400 block font-medium">Seats Left</span>
-            <span id="modal-event-seats" class="font-semibold text-indigo-600">50 / 100</span>
+            <span class="text-slate-400 block font-medium">Available Seats</span>
+            <span id="modal-event-seats" class="font-semibold text-indigo-400">50 / 100</span>
           </div>
         </div>
 
         <!-- Description -->
         <div>
-          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">About This Event</h4>
-          <p id="modal-event-description" class="text-sm text-slate-600 leading-relaxed">
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">About This Node</h4>
+          <p id="modal-event-description" class="text-sm text-slate-300 leading-relaxed">
             Description will appear here.
           </p>
         </div>
 
-        <hr class="border-slate-100">
+        <hr class="border-white/10">
 
         <!-- Registration Form -->
         <div>
-          <h4 class="text-base font-bold text-slate-900 mb-1">Register for Event</h4>
-          <p class="text-xs text-slate-500 mb-4">Ensure your roll number and college email are accurate.</p>
+          <div class="flex items-center justify-between mb-1">
+            <h4 class="text-base font-bold text-white">Register for this Event</h4>
+            <span class="text-xs text-amber-300 flex items-center gap-1 anim-popeye">💪 Earn a Stamp!</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-4">Complete validation to receive your festive badge.</p>
 
           <!-- Inline Form Error/Success Box -->
           <div id="modal-alert" class="hidden mb-4 p-3.5 rounded-xl text-xs font-medium"></div>
@@ -295,58 +464,59 @@
             <input type="hidden" id="modal-event-id" value="">
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Student Full Name *</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Student Full Name *</label>
               <input 
                 type="text" 
                 id="reg-student-name" 
                 required 
                 placeholder="e.g. Priya Sharma" 
-                class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                class="w-full px-3.5 py-2 text-sm rounded-xl bg-slate-900 border border-white/15 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white outline-none transition"
               />
-              <span id="err-student-name" class="text-rose-500 text-[11px] hidden mt-0.5 block">Student name is required</span>
+              <span id="err-student-name" class="text-rose-400 text-[11px] hidden mt-0.5 block">Student name is required</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Roll Number *</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Roll Number *</label>
                 <input 
                   type="text" 
                   id="reg-roll-number" 
                   required 
                   placeholder="e.g. 23CS1082" 
-                  class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                  class="w-full px-3.5 py-2 text-sm rounded-xl bg-slate-900 border border-white/15 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white outline-none transition"
                 />
-                <span id="err-roll-number" class="text-rose-500 text-[11px] hidden mt-0.5 block">Roll number is required</span>
+                <span id="err-roll-number" class="text-rose-400 text-[11px] hidden mt-0.5 block">Roll number is required</span>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number (Optional)</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Phone Number (Optional)</label>
                 <input 
                   type="tel" 
                   id="reg-phone" 
                   placeholder="e.g. 9876543210" 
-                  class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                  class="w-full px-3.5 py-2 text-sm rounded-xl bg-slate-900 border border-white/15 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white outline-none transition"
                 />
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">College Email Address *</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">College Email Address *</label>
               <input 
                 type="email" 
                 id="reg-email" 
                 required 
                 placeholder="e.g. priya@college.edu" 
-                class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                class="w-full px-3.5 py-2 text-sm rounded-xl bg-slate-900 border border-white/15 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white outline-none transition"
               />
-              <span id="err-email" class="text-rose-500 text-[11px] hidden mt-0.5 block">Please enter a valid email containing '@'</span>
+              <span id="err-email" class="text-rose-400 text-[11px] hidden mt-0.5 block">Please enter a valid email containing '@'</span>
             </div>
 
             <button 
               type="submit" 
               id="submit-register-btn"
-              class="w-full mt-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-semibold rounded-xl text-sm transition shadow-md shadow-indigo-200 flex items-center justify-center gap-2"
+              class="w-full mt-2 py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-[0.99] text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-900/50 flex items-center justify-center gap-2"
             >
-              <span>Confirm Registration</span>
+              <span>Confirm Registration & Collect Stamp</span>
+              <span>🎉</span>
             </button>
           </form>
         </div>
@@ -355,8 +525,8 @@
   </div>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-    <p>© 2026 Zenith College Fest Management System · Built with HTML, Tailwind CSS, JavaScript & FastAPI.</p>
+  <footer class="bg-[#090d16]/80 border-t border-white/10 py-6 text-center text-xs text-slate-500">
+    <p>© 2026 Zenith College Fest Management System · Spatial Canvas Powered by FastAPI & SQLite.</p>
   </footer>
 
   <!-- App Script -->
