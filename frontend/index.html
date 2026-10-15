@@ -226,6 +226,18 @@
       animation: cloudDrift 28s ease-in-out infinite;
     }
 
+    /* Skateboard Penguin Loop Across Bottom */
+    @keyframes skateAcross {
+      0% { transform: translateX(60px) rotate(1deg); }
+      48% { transform: translateX(calc(100vw - 140px)) rotate(-1deg); }
+      50% { transform: translateX(calc(100vw - 140px)) scaleX(-1); }
+      98% { transform: translateX(60px) scaleX(-1) rotate(1deg); }
+      100% { transform: translateX(60px) rotate(1deg); }
+    }
+    .anim-skater {
+      animation: skateAcross 24s linear infinite;
+    }
+
     /* Idle Easter Egg: Character Jump & Speech Pop */
     @keyframes characterJump {
       0%, 100% { transform: translateY(0) scale(1); }
@@ -270,7 +282,7 @@
         transition: none !important;
         scroll-behavior: auto !important;
       }
-      .card-deal-in, .rubber-stamp, .seat-bar-fill, .anim-hero-bob, .anim-cloud-drift {
+      .card-deal-in, .rubber-stamp, .seat-bar-fill, .anim-hero-bob, .anim-cloud-drift, .anim-skater {
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
@@ -537,10 +549,10 @@
       </div>
     </main>
 
-    <!-- Skateboard Penguin at the bottom (static doodle with dashed line) -->
-    <div class="hidden md:block w-full overflow-hidden pointer-events-none relative h-16 z-20" aria-hidden="true">
-      <div class="absolute bottom-0 right-12">
-        <img src="/assets/characters/character4.svg" alt="" class="w-18 h-18 object-contain" />
+    <!-- Skateboard Penguin skating across the bottom on a loop (hidden on mobile <768px) -->
+    <div class="hidden md:block w-full overflow-hidden pointer-events-none relative h-20 -mt-2 z-20" aria-hidden="true">
+      <div class="anim-skater absolute bottom-0 left-0">
+        <img src="/assets/characters/character4.svg" alt="" class="w-20 h-20 object-contain drop-shadow-sm" />
       </div>
       <div class="w-full border-b border-dashed border-ink/40 absolute bottom-3"></div>
     </div>
