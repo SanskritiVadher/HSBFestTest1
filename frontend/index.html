@@ -3,573 +3,387 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zenith '26 — Fest Doodle & Sketch Campus</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%220%22%20100%20100><text y=%22.9em%22 font-size=%2290%22>✏️</text></svg>">
+  <title>Zenith '26 — College Fest Management System</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%220%22%20100%20100><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  
+  <!-- Tailwind CSS via Play CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Handwritten Sketch Font -->
+
+  <!-- Google Fonts: Caveat Brush & Patrick Hand -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Patrick+Hand&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Patrick+Hand&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            doodle: ['"Patrick Hand"', 'cursive'],
-            sketch: ['"Architects Daughter"', 'cursive'],
-            cute: ['"Gaegu"', 'cursive'],
-          },
           colors: {
-            ink: '#1e293b',
-            paper: '#fffdfa',
-            doodleYellow: '#fef08a',
-            doodleCyan: '#bae6fd',
-            doodleGreen: '#bbf7d0',
-            doodlePurple: '#e9d5ff',
-            doodlePink: '#fbcfe8'
+            paper: '#FBF6EA',
+            ink: '#2B2A28',
+            tomato: '#E5533D',
+            mustard: '#F2B84B',
+            coral: '#F28B82',
+            sage: '#8DB580',
+            tangerine: '#F08A3C',
+            clay: '#D9A58F',
+          },
+          fontFamily: {
+            brush: ['"Caveat Brush"', 'cursive', 'sans-serif'],
+            hand: ['"Patrick Hand"', 'cursive', 'sans-serif'],
+            sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
           }
         }
       }
     }
   </script>
+
   <style>
-    /* Sketchbook Grid & Paper Texture */
+    :root {
+      --paper: #FBF6EA;
+      --ink: #2B2A28;
+      --tomato: #E5533D;
+      --mustard: #F2B84B;
+      --coral: #F28B82;
+      --sage: #8DB580;
+      --tangerine: #F08A3C;
+      --clay: #D9A58F;
+    }
+
+    /* Page Background with faint dotted-grid sketchbook texture */
     body {
-      background-color: #fbf8f1;
-      background-image: 
-        radial-gradient(#cbd5e1 1.2px, transparent 1.2px),
-        linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
-      background-size: 24px 24px, 48px 48px, 48px 48px;
-      color: #1e293b;
-      font-family: 'Patrick Hand', cursive;
+      background-color: var(--paper);
+      background-image: radial-gradient(rgba(43, 42, 40, 0.12) 1.2px, transparent 1.2px);
+      background-size: 20px 20px;
+      color: var(--ink);
+      font-family: 'Patrick Hand', cursive, sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
       overflow-x: hidden;
     }
 
-    /* Hand-Drawn Wobbly Borders */
-    .doodle-card {
-      background: #ffffff;
-      border: 2.5px solid #1e293b;
-      border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-      box-shadow: 4px 5px 0px #1e293b;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Wobbly Sketch Card */
+    .sketch-card {
+      background-color: #FFFFFF;
+      border: 2px solid var(--ink);
+      border-radius: 14px 6px 16px 8px;
+      box-shadow: 4px 4px 0 var(--ink);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .doodle-card:hover {
-      transform: translateY(-4px) rotate(-0.5deg);
-      box-shadow: 6px 8px 0px #1e293b;
+    .sketch-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 var(--ink);
     }
 
-    .doodle-btn {
-      border: 2.5px solid #1e293b;
-      border-radius: 255px 25px 225px 25px/25px 225px 25px 255px;
-      box-shadow: 3px 3px 0px #1e293b;
-      transition: all 0.2s ease;
+    /* Sketch Button */
+    .sketch-btn {
+      border: 2px solid var(--ink);
+      border-radius: 12px 6px 14px 8px;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: all 0.15s ease;
     }
-    .doodle-btn:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 5px 5px 0px #1e293b;
+    .sketch-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--ink);
     }
-    .doodle-btn:active {
+    .sketch-btn:active {
       transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0px #1e293b;
+      box-shadow: 1px 1px 0 var(--ink);
     }
 
-    /* Interactive Background Doodle Campus Map */
-    #background-canvas-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
+    /* Sketch Input */
+    .sketch-input {
+      border: 2px solid var(--ink);
+      border-radius: 10px 14px 8px 12px;
+      box-shadow: inset 1px 1px 3px rgba(43, 42, 40, 0.1);
+    }
+    .sketch-input:focus {
+      outline: none;
+      border-color: var(--tomato);
+      box-shadow: 0 0 0 2px var(--mustard);
+    }
+
+    /* Background Cartoon Floating Animations */
+    @keyframes gentleFloat1 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    @keyframes gentleFloat2 {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(-2deg); }
+    }
+
+    .bg-char-float1 { animation: gentleFloat1 7s ease-in-out infinite; }
+    .bg-char-float2 { animation: gentleFloat2 8s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bg-char-float1, .bg-char-float2 {
+        animation: none;
+      }
+    }
+
+    /* Marker Highlight */
+    .marker-highlight {
+      position: relative;
+      display: inline-block;
+      z-index: 1;
+    }
+    .marker-highlight::before {
+      content: "";
+      position: absolute;
+      left: -4px;
+      right: -4px;
+      bottom: 2px;
+      top: 25%;
+      background-color: var(--mustard);
       opacity: 0.85;
-    }
-    #bg-map-svg {
-      width: 100%;
-      height: 100%;
-      pointer-events: auto;
-    }
-    .doodle-pin {
-      cursor: pointer;
-      pointer-events: auto;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .doodle-pin:hover {
-      transform: scale(1.22) rotate(-3deg);
+      z-index: -1;
+      border-radius: 4px 10px 6px 12px;
+      transform: rotate(-1deg);
     }
 
-    /* Roaming / Dancing Animations */
-    @keyframes ordFlyLoop {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(45px, -18px) rotate(5deg); }
-      50% { transform: translate(90px, 5px) rotate(-4deg); }
-      75% { transform: translate(40px, 20px) rotate(6deg); }
-      100% { transform: translate(0, 0) rotate(0deg); }
-    }
-    @keyframes popeyeFlexLoop {
-      0%, 100% { transform: translateY(0) scale(1); }
-      30% { transform: translateY(-12px) rotate(-8deg) scale(1.12); }
-      60% { transform: translateY(-4px) rotate(8deg) scale(1.08); }
-    }
-    @keyframes oswaldWobbleLoop {
-      0%, 100% { transform: scale(1, 1) rotate(0deg); }
-      35% { transform: scale(1.15, 0.86) rotate(-6deg); }
-      70% { transform: scale(0.9, 1.12) rotate(6deg); }
-    }
-    @keyframes mrBeanDanceLoop {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      20% { transform: translate(-8px, -14px) rotate(-10deg); }
-      40% { transform: translate(8px, -4px) rotate(10deg); }
-      60% { transform: translate(-6px, -10px) rotate(-6deg); }
-      80% { transform: translate(4px, 0px) rotate(4deg); }
-    }
-
-    .roam-dragon { animation: ordFlyLoop 8s ease-in-out infinite; }
-    .roam-popeye { animation: popeyeFlexLoop 2.2s ease-in-out infinite; }
-    .roam-oswald { animation: oswaldWobbleLoop 3.4s ease-in-out infinite; }
-    .roam-bean { animation: mrBeanDanceLoop 2.8s ease-in-out infinite; }
-
-    /* Doodle Dashed Road Line */
-    .doodle-road {
-      stroke-dasharray: 8 6;
-      animation: roadWalk 25s linear infinite;
-    }
-    @keyframes roadWalk {
-      to { stroke-dashoffset: -200; }
-    }
-
-    /* Highlighter Marker Styles */
-    .highlight-yellow { background: linear-gradient(104deg, rgba(254,240,138,0) 0.9%, rgba(254,240,138,0.95) 2.4%, rgba(254,240,138,0.6) 98%); border-radius: 4px; padding: 0 4px; }
-    .highlight-cyan { background: linear-gradient(104deg, rgba(186,230,253,0) 0.9%, rgba(186,230,253,0.95) 2.4%, rgba(186,230,253,0.6) 98%); border-radius: 4px; padding: 0 4px; }
-    .highlight-pink { background: linear-gradient(104deg, rgba(251,207,232,0) 0.9%, rgba(251,207,232,0.95) 2.4%, rgba(251,207,232,0.6) 98%); border-radius: 4px; padding: 0 4px; }
+    /* Custom Scrollbar in Earthy Ink */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--paper); }
+    ::-webkit-scrollbar-thumb { background: #c2bbae; border-radius: 9999px; border: 2px solid var(--ink); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--tomato); }
   </style>
 </head>
-<body class="min-h-screen relative text-slate-800 text-lg">
+<body class="min-h-screen relative flex flex-col">
 
   <!-- ============================================== -->
-  <!-- 1. FULLSCREEN HAND-DRAWN SKETCH CAMPUS MAP BG  -->
+  <!-- BACKGROUND DECORATIVE CARTOON ART (0.2 OPACITY) -->
+  <!-- Non-intrusive, pointer-events: none, aria-hidden -->
   <!-- ============================================== -->
-  <div id="background-canvas-container">
-    <svg id="bg-map-svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <!-- Wobbly Hand-Drawn Filter -->
-        <filter id="handDrawn" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </defs>
-
-      <!-- Hand-Drawn Sketch Roads Across Campus -->
-      <g fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round" class="doodle-road" filter="url(#handDrawn)">
-        <path d="M 160,280 Q 380,160 760,210 T 1400,260" />
-        <path d="M 760,210 Q 720,440 450,720" />
-        <path d="M 760,210 Q 940,420 1250,720" />
-        <path d="M 450,720 Q 720,840 1250,720" />
-      </g>
-
-      <!-- Little Hand-Drawn Trees & Clouds in Background -->
-      <g stroke="#94a3b8" stroke-width="2" fill="none">
-        <!-- Trees -->
-        <path d="M280,380 Q290,340 310,340 Q330,340 340,380 Z M310,380 L310,400" fill="#dcfce7" stroke="#16a34a"/>
-        <path d="M960,320 Q970,280 990,280 Q1010,280 1020,320 Z M990,320 L990,340" fill="#dcfce7" stroke="#16a34a"/>
-        <path d="M600,600 Q610,560 630,560 Q650,560 660,600 Z M630,600 L630,620" fill="#dcfce7" stroke="#16a34a"/>
-        <!-- Clouds -->
-        <path d="M120,120 Q140,90 170,110 Q200,90 220,120 Z" fill="#ffffff" stroke="#94a3b8"/>
-        <path d="M1300,100 Q1320,70 1350,90 Q1380,70 1400,100 Z" fill="#ffffff" stroke="#94a3b8"/>
-      </g>
-
-      <!-- Interactive Campus Location Doodle Pins -->
-      <!-- Venue 1: Main Auditorium -->
-      <g class="doodle-pin" onclick="window.filterByVenue('Main Auditorium')">
-        <rect x="100" y="230" width="130" height="90" rx="14" fill="#ffffff" stroke="#1e293b" stroke-width="3" filter="url(#handDrawn)"/>
-        <text x="165" y="268" font-size="28" text-anchor="middle">🏛️</text>
-        <text x="165" y="296" font-family="'Architects Daughter', cursive" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">AUDITORIUM</text>
-      </g>
-
-      <!-- Venue 2: Open Air Theatre -->
-      <g class="doodle-pin" onclick="window.filterByVenue('Open Air Theatre')">
-        <rect x="690" y="160" width="150" height="95" rx="16" fill="#fef08a" stroke="#1e293b" stroke-width="3" filter="url(#handDrawn)"/>
-        <text x="765" y="200" font-size="32" text-anchor="middle">🎪</text>
-        <text x="765" y="232" font-family="'Architects Daughter', cursive" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">OPEN AIR THEATRE</text>
-      </g>
-
-      <!-- Venue 3: Computer Lab 1 -->
-      <g class="doodle-pin" onclick="window.filterByVenue('Computer Lab 1')">
-        <rect x="1330" y="210" width="140" height="90" rx="14" fill="#bae6fd" stroke="#1e293b" stroke-width="3" filter="url(#handDrawn)"/>
-        <text x="1400" y="250" font-size="28" text-anchor="middle">💻</text>
-        <text x="1400" y="278" font-family="'Architects Daughter', cursive" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">TECH LAB 1</text>
-      </g>
-
-      <!-- Venue 4: Sports Ground -->
-      <g class="doodle-pin" onclick="window.filterByVenue('Sports Ground')">
-        <rect x="380" y="670" width="140" height="95" rx="14" fill="#bbf7d0" stroke="#1e293b" stroke-width="3" filter="url(#handDrawn)"/>
-        <text x="450" y="712" font-size="30" text-anchor="middle">⚽</text>
-        <text x="450" y="742" font-family="'Architects Daughter', cursive" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">SPORTS GROUND</text>
-      </g>
-
-      <!-- Venue 5: Gaming Arena -->
-      <g class="doodle-pin" onclick="window.filterByVenue('Gaming Arena')">
-        <rect x="1180" y="670" width="140" height="95" rx="14" fill="#e9d5ff" stroke="#1e293b" stroke-width="3" filter="url(#handDrawn)"/>
-        <text x="1250" y="712" font-size="30" text-anchor="middle">🎮</text>
-        <text x="1250" y="742" font-family="'Architects Daughter', cursive" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">GAMING ARENA</text>
-      </g>
-    </svg>
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <!-- Top-Left Corner: Cat & Mouse -->
+    <img src="/assets/characters/character1.svg" alt="" class="absolute -top-4 -left-6 w-36 sm:w-44 md:w-52 opacity-20 bg-char-float1" />
+    
+    <!-- Top-Right Corner: Kid with Kite -->
+    <img src="/assets/characters/character3.svg" alt="" class="absolute top-8 -right-4 w-32 sm:w-40 md:w-48 opacity-20 bg-char-float2" />
+    
+    <!-- Mid Left Gutter: Sleepy Bear hugging honey pot (hidden on mobile) -->
+    <img src="/assets/characters/character2.svg" alt="" class="hidden md:block absolute top-[45%] -left-8 w-36 sm:w-44 opacity-20 bg-char-float2" />
+    
+    <!-- Mid Right Gutter: Penguin on Skateboard (hidden on mobile) -->
+    <img src="/assets/characters/character4.svg" alt="" class="hidden md:block absolute top-[55%] -right-6 w-36 sm:w-40 opacity-20 bg-char-float1" />
+    
+    <!-- Bottom Left Gutter: Tiny Dragon blowing star (hidden on mobile) -->
+    <img src="/assets/characters/character5.svg" alt="" class="hidden md:block absolute bottom-6 left-6 w-32 sm:w-36 opacity-20 bg-char-float1" />
   </div>
 
-  <!-- ============================================== -->
-  <!-- 2. FOREGROUND SKETCHBOOK CONTENT               -->
-  <!-- ============================================== -->
-  <div class="relative z-10 flex flex-col min-h-screen">
+  <!-- FOREGROUND INTERACTIVE CONTENT -->
+  <div class="relative z-10 flex flex-col flex-grow">
 
-    <!-- Top Sticky Sketch Navbar -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b-2 border-slate-800 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span class="text-3xl filter drop-shadow roam-dragon cursor-pointer">✏️</span>
-          <a href="/" class="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 font-sketch flex items-center gap-2">
-            <span>ZENITH</span>
-            <span class="highlight-yellow border-2 border-slate-800 px-2 rounded-lg text-xl -rotate-2 inline-block">'26</span>
-          </a>
-        </div>
-
-        <!-- Handwritten Nav Links -->
-        <nav class="hidden md:flex items-center gap-3 text-lg font-bold">
-          <a href="#events-section" class="px-3 py-1 rounded-xl hover:bg-slate-100 transition border-b-2 border-transparent hover:border-slate-800">
-            📌 Event Sketchbook
-          </a>
-          <button onclick="window.scrollToBgMap()" class="px-3 py-1 rounded-xl hover:bg-slate-100 transition border-b-2 border-transparent hover:border-slate-800">
-            🗺️ Click Campus Map
-          </button>
-          <a href="#passport-section" class="px-3 py-1 rounded-xl hover:bg-slate-100 transition border-b-2 border-transparent hover:border-slate-800">
-            🎟️ Stamp Passport
-          </a>
-          <a href="/admin.html" class="px-3 py-1 bg-amber-100 doodle-btn text-slate-900 hover:bg-amber-200">
-            ⚙️ Admin Room
-          </a>
-        </nav>
-
-        <!-- User Greeting Tag -->
-        <div class="flex items-center gap-2">
-          <div id="greeting-pill" class="bg-yellow-50 border-2 border-slate-800 px-3 py-1 rounded-full text-base font-bold text-slate-800 shadow-sm flex items-center gap-2 -rotate-1">
-            <span class="roam-bean text-xl">🧸</span>
-            <span id="greeting-text">Hi Explorer!</span>
-          </div>
-        </div>
+    <!-- 1. SLIM STICKY NAVBAR -->
+    <header class="sticky top-0 z-40 bg-[#FBF6EA]/95 backdrop-blur-sm border-b-2 border-ink shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 group">
+          <span class="text-xl">⚡</span>
+          <span class="font-brush text-2xl sm:text-3xl font-bold tracking-tight text-ink group-hover:text-tomato transition">
+            Zenith '26
+          </span>
+        </a>
+        <a href="/admin.html" class="sketch-btn px-3 py-1 bg-white hover:bg-mustard text-sm font-bold text-ink transition flex items-center gap-1.5">
+          <span>Admin Dashboard</span>
+          <span class="text-xs">→</span>
+        </a>
       </div>
     </header>
 
-    <!-- Hero Section with Roaming Character Sketches -->
-    <section class="relative pt-6 pb-8 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-5xl mx-auto text-center relative z-10">
-
-        <!-- ============================================== -->
-        <!-- 4 MOVING SKETCHED CHARACTERS (NO CHEESY LABELS) -->
-        <!-- ============================================== -->
-        <div class="doodle-card p-4 sm:p-6 mb-6 bg-white relative overflow-hidden">
-          
-          <!-- Title Note -->
-          <div class="flex items-center justify-between mb-4 border-b-2 border-dashed border-slate-300 pb-2">
-            <span class="font-sketch font-bold text-base text-slate-700 flex items-center gap-2">
-              ✏️ <span>Fest Mascot Doodles Roaming the Campus Grounds:</span>
-            </span>
-            <span class="text-xs text-slate-500 font-mono hidden sm:inline">(Tap any doodle for a cheer!)</span>
-          </div>
-
-          <!-- The 4 Drawn SVG Characters Dancing / Moving -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
-            
-            <!-- 1. The Playful Green Dragon (Ord from Dragon Tales) -->
-            <div onclick="window.characterCheer('dragon')" class="p-3 rounded-2xl border-2 border-dashed border-emerald-400 hover:border-emerald-600 bg-emerald-50/50 cursor-pointer transition text-center group">
-              <div class="w-20 h-20 mx-auto flex items-center justify-center roam-dragon">
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                  <!-- Hand-drawn style friendly dragon -->
-                  <path d="M30,75 Q15,85 10,65 Q22,70 34,72" fill="#86efac" stroke="#16a34a" stroke-width="2.5"/>
-                  <path d="M32,48 Q10,25 28,22 Q38,32 42,46" fill="#bbf7d0" stroke="#16a34a" stroke-width="2.5"/>
-                  <ellipse cx="50" cy="62" rx="24" ry="28" fill="#86efac" stroke="#15803d" stroke-width="2.5"/>
-                  <ellipse cx="52" cy="66" rx="14" ry="18" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
-                  <circle cx="50" cy="35" r="18" fill="#86efac" stroke="#15803d" stroke-width="2.5"/>
-                  <ellipse cx="50" cy="41" rx="11" ry="8" fill="#bbf7d0"/>
-                  <circle cx="45" cy="32" r="3" fill="#1e293b"/>
-                  <circle cx="55" cy="32" r="3" fill="#1e293b"/>
-                  <path d="M45,43 Q50,48 55,43" stroke="#dc2626" stroke-width="2" fill="none"/>
-                  <!-- Tiny Horns -->
-                  <polygon points="38,23 34,12 44,19" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
-                  <polygon points="62,23 66,12 56,19" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
-                  <ellipse cx="38" cy="88" rx="8" ry="5" fill="#15803d"/>
-                  <ellipse cx="62" cy="88" rx="8" ry="5" fill="#15803d"/>
-                </svg>
-              </div>
-              <p class="text-xs font-bold text-emerald-800 mt-2 font-sketch">I wish, I wish with all my heart!</p>
-            </div>
-
-            <!-- 2. The Sailor with Giant Forearms (Popeye) -->
-            <div onclick="window.characterCheer('popeye')" class="p-3 rounded-2xl border-2 border-dashed border-sky-400 hover:border-sky-600 bg-sky-50/50 cursor-pointer transition text-center group">
-              <div class="w-20 h-20 mx-auto flex items-center justify-center roam-popeye">
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                  <!-- White Sailor Cap -->
-                  <ellipse cx="50" cy="22" rx="18" ry="7" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
-                  <path d="M34,22 Q50,12 66,22" stroke="#1e293b" stroke-width="2.5" fill="#ffffff"/>
-                  <!-- Head & Big Chin & Pipe -->
-                  <circle cx="50" cy="34" r="14" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/>
-                  <circle cx="45" cy="30" r="2.5" fill="#1e293b"/>
-                  <!-- Wink eye -->
-                  <path d="M52,30 Q56,32 60,30" stroke="#1e293b" stroke-width="2.5" fill="none"/>
-                  <!-- Corncob Pipe -->
-                  <path d="M40,38 L32,42 L32,36" stroke="#854d0e" stroke-width="3" fill="none"/>
-                  <!-- Big Bulging Forearms with Anchor -->
-                  <ellipse cx="26" cy="64" rx="14" ry="11" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/>
-                  <ellipse cx="74" cy="64" rx="14" ry="11" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/>
-                  <!-- Tiny Anchor Tattoo -->
-                  <path d="M26,60 L26,68 M22,63 L30,63 M22,68 Q26,72 30,68" stroke="#1d4ed8" stroke-width="1.5" fill="none"/>
-                  <!-- Black/Red Sailor Shirt -->
-                  <rect x="38" y="48" width="24" height="30" rx="6" fill="#1e293b" stroke="#0f172a" stroke-width="2.5"/>
-                  <path d="M38,48 Q50,56 62,48" stroke="#dc2626" stroke-width="3" fill="none"/>
-                </svg>
-              </div>
-              <p class="text-xs font-bold text-sky-800 mt-2 font-sketch">Strong to the finich!</p>
-            </div>
-
-            <!-- 3. The Blue/Purple Round Octopus with Bowler Hat (Oswald) -->
-            <div onclick="window.characterCheer('oswald')" class="p-3 rounded-2xl border-2 border-dashed border-indigo-400 hover:border-indigo-600 bg-indigo-50/50 cursor-pointer transition text-center group">
-              <div class="w-20 h-20 mx-auto flex items-center justify-center roam-oswald">
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                  <!-- Little Bowler Hat -->
-                  <ellipse cx="50" cy="18" rx="14" ry="4" fill="#1e293b"/>
-                  <path d="M40,18 Q40,8 50,8 Q60,8 60,18 Z" fill="#1e293b"/>
-                  <!-- Big Round Squishy Body -->
-                  <circle cx="50" cy="46" r="26" fill="#818cf8" stroke="#4338ca" stroke-width="2.5"/>
-                  <!-- Gentle Friendly Face -->
-                  <ellipse cx="42" cy="42" rx="3.5" ry="5" fill="#1e293b"/>
-                  <ellipse cx="58" cy="42" rx="3.5" ry="5" fill="#1e293b"/>
-                  <path d="M46,50 Q50,56 54,50" stroke="#1e293b" stroke-width="2" fill="none"/>
-                  <!-- 8 Squiggly Tentacles -->
-                  <path d="M30,68 Q24,84 32,90 Q40,84 36,70" fill="#a5b4fc" stroke="#4338ca" stroke-width="2"/>
-                  <path d="M42,72 Q40,92 48,92 Q52,86 48,72" fill="#a5b4fc" stroke="#4338ca" stroke-width="2"/>
-                  <path d="M54,72 Q56,92 62,90 Q62,84 58,72" fill="#a5b4fc" stroke="#4338ca" stroke-width="2"/>
-                  <path d="M68,68 Q76,84 70,90 Q64,84 66,70" fill="#a5b4fc" stroke="#4338ca" stroke-width="2"/>
-                </svg>
-              </div>
-              <p class="text-xs font-bold text-indigo-800 mt-2 font-sketch">Have a calm, wonderful day!</p>
-            </div>
-
-            <!-- 4. Mr. Bean & His Brown Knitted Teddy Bear -->
-            <div onclick="window.characterCheer('bean')" class="p-3 rounded-2xl border-2 border-dashed border-amber-400 hover:border-amber-600 bg-amber-50/50 cursor-pointer transition text-center group">
-              <div class="w-20 h-20 mx-auto flex items-center justify-center roam-bean">
-                <svg viewBox="0 0 100 100" class="w-full h-full">
-                  <!-- Mr Bean's Iconic Teddy Bear -->
-                  <!-- Ears with white button -->
-                  <circle cx="34" cy="24" r="8" fill="#92400e" stroke="#451a03" stroke-width="2"/>
-                  <circle cx="66" cy="24" r="8" fill="#92400e" stroke="#451a03" stroke-width="2"/>
-                  <!-- Head -->
-                  <circle cx="50" cy="38" r="18" fill="#b45309" stroke="#451a03" stroke-width="2.5"/>
-                  <!-- Button Eyes -->
-                  <circle cx="43" cy="34" r="4" fill="#f8fafc" stroke="#1e293b" stroke-width="1.5"/>
-                  <circle cx="43" cy="34" r="1.5" fill="#1e293b"/>
-                  <circle cx="57" cy="34" r="4" fill="#f8fafc" stroke="#1e293b" stroke-width="1.5"/>
-                  <circle cx="57" cy="34" r="1.5" fill="#1e293b"/>
-                  <!-- Stitched Snout -->
-                  <ellipse cx="50" cy="44" rx="7" ry="5" fill="#d97706"/>
-                  <line x1="50" y1="41" x2="50" y2="47" stroke="#451a03" stroke-width="1.5"/>
-                  <!-- Knitted Body -->
-                  <ellipse cx="50" cy="68" rx="16" ry="18" fill="#b45309" stroke="#451a03" stroke-width="2.5"/>
-                  <!-- Teddy Arms & Legs -->
-                  <ellipse cx="30" cy="62" rx="7" ry="11" fill="#92400e" stroke="#451a03" stroke-width="2"/>
-                  <ellipse cx="70" cy="62" rx="7" ry="11" fill="#92400e" stroke="#451a03" stroke-width="2"/>
-                  <ellipse cx="42" cy="88" rx="7" ry="9" fill="#92400e" stroke="#451a03" stroke-width="2"/>
-                  <ellipse cx="58" cy="88" rx="7" ry="9" fill="#92400e" stroke="#451a03" stroke-width="2"/>
-                </svg>
-              </div>
-              <p class="text-xs font-bold text-amber-900 mt-2 font-sketch">Teddy says cheers!</p>
-            </div>
-
-          </div>
-        </div>
-
-        <h1 class="text-4xl sm:text-6xl font-black text-slate-900 font-sketch tracking-tight">
-          Welcome to <span class="highlight-yellow">Zenith '26</span> Campus Sketchbook!
-        </h1>
-        <p class="mt-2 text-xl text-slate-700 max-w-2xl mx-auto font-doodle">
-          Click any venue doodle on the campus map in the background (Auditorium, Open Air Theatre, Tech Lab) or filter events below.
-        </p>
-
-        <!-- Active Venue Pill -->
-        <div id="active-venue-pill" class="hidden mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border-2 border-slate-900 text-slate-900 text-base font-bold shadow-sm">
-          <span>📍 Map Pin Active:</span> <span id="active-venue-name" class="underline"></span>
-          <button onclick="window.resetVenueFilter()" class="ml-2 text-rose-600 hover:text-rose-800 font-black">✕ Reset</button>
-        </div>
+    <!-- 2. COMPACT HERO SECTION (<180px on desktop) -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 pt-5 pb-3 text-center">
+      <h1 class="font-brush text-4xl sm:text-5xl font-bold text-ink tracking-tight leading-tight">
+        Ignite Your Spark at <span class="marker-highlight">Zenith '26</span>
+      </h1>
+      <!-- Hand-Drawn Underline SVG -->
+      <div class="flex justify-center -mt-1 mb-1">
+        <svg class="w-48 sm:w-64 h-3.5 text-tomato" viewBox="0 0 240 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+          <path d="M 4 8 Q 60 2 120 7 T 236 4" />
+        </svg>
       </div>
+      <p class="text-base sm:text-lg text-ink font-semibold mt-0.5">
+        <span class="font-sans font-bold text-sm bg-white border border-ink px-2 py-0.5 rounded mr-1.5 shadow-sm">Nov 14–15, 2026</span>
+        48 Hours of Energy, Innovation & Rivalry across Campus Auditoriums.
+      </p>
     </section>
 
-    <!-- Main Content: Event Grid & Controls -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-8">
-
-      <!-- Search & Category Filters (Doodle Style) -->
-      <section id="events-section" class="doodle-card p-5 space-y-4">
-        <div class="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
-          
-          <!-- Search Input -->
-          <div class="relative flex-1 max-w-md">
-            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-xl">
-              🔍
-            </span>
-            <input 
-              type="text" 
-              id="search-input" 
-              placeholder="Search event doodles by title..." 
-              class="w-full pl-10 pr-4 py-2 rounded-xl bg-white border-2 border-slate-800 text-lg font-doodle outline-none focus:ring-2 focus:ring-amber-300"
-            />
-          </div>
-
-          <!-- Category Buttons -->
-          <div id="category-filters" class="flex flex-wrap items-center gap-2">
-            <button data-category="All" class="filter-btn doodle-btn px-4 py-1.5 text-base font-bold bg-amber-300 text-slate-900">
-              All Events
-            </button>
-            <button data-category="Technical" class="filter-btn doodle-btn px-3.5 py-1.5 text-base font-bold bg-white text-slate-800 hover:bg-sky-100">
-              💻 Technical
-            </button>
-            <button data-category="Cultural" class="filter-btn doodle-btn px-3.5 py-1.5 text-base font-bold bg-white text-slate-800 hover:bg-pink-100">
-              🎭 Cultural
-            </button>
-            <button data-category="Sports" class="filter-btn doodle-btn px-3.5 py-1.5 text-base font-bold bg-white text-slate-800 hover:bg-emerald-100">
-              ⚽ Sports
-            </button>
-            <button data-category="Gaming" class="filter-btn doodle-btn px-3.5 py-1.5 text-base font-bold bg-white text-slate-800 hover:bg-purple-100">
-              🎮 Gaming
-            </button>
-            <button data-category="Workshop" class="filter-btn doodle-btn px-3.5 py-1.5 text-base font-bold bg-white text-slate-800 hover:bg-amber-100">
-              📐 Workshop
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Status Container -->
-      <div id="status-container" class="hidden mb-6"></div>
-
-      <!-- Events Doodle Grid -->
-      <div id="events-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Injected dynamically by app.js -->
-      </div>
-
-      <!-- Fest Passport Section -->
-      <section id="passport-section" class="doodle-card p-6 sm:p-8 bg-amber-50/60 relative">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-800 pb-4 mb-6">
-          <div>
-            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 font-sketch flex items-center gap-2">
-              <span>🎟️</span> <span>Student Fest Passport</span>
-            </h3>
-            <p class="text-lg text-slate-700 font-doodle">Your stamped collection of registered events!</p>
-          </div>
-          <div class="text-base bg-white border-2 border-slate-800 px-4 py-1.5 rounded-full font-bold shadow-sm inline-block">
-            🏅 <span id="passport-badge-count">0 Stamps Earned</span>
-          </div>
+    <!-- 3. STICKY TOOLBAR (Search + Category Filter Chips) -->
+    <div class="sticky top-14 z-30 bg-[#FBF6EA]/95 backdrop-blur-sm border-y border-ink/40 py-2.5 shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-sm">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-ink text-sm">
+            🔍
+          </span>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Search events by title..." 
+            class="sketch-input w-full pl-9 pr-3 py-1.5 bg-white text-base text-ink placeholder-ink/50"
+          />
         </div>
 
-        <div id="passport-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div class="p-8 rounded-2xl bg-white border-2 border-dashed border-slate-400 text-center text-slate-500 col-span-full font-doodle">
-            <span class="text-4xl block mb-2 roam-oswald">🐙</span>
-            <p class="text-xl font-bold text-slate-800">Your passport page is empty right now!</p>
-            <p class="text-base text-slate-600">Register for events above to collect official fest rubber-stamp passes.</p>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Modal Form (Doodle Style) -->
-    <div id="event-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-      <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden border-4 border-slate-900 shadow-2xl max-h-[92vh] flex flex-col font-doodle">
-        
-        <!-- Header -->
-        <div class="p-5 bg-amber-200 border-b-3 border-slate-900 flex justify-between items-center">
-          <div class="flex items-center gap-3">
-            <span id="modal-event-icon" class="text-4xl p-2 bg-white rounded-xl border-2 border-slate-900">⚡</span>
-            <div>
-              <span id="modal-event-category" class="text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-white border border-slate-900">Category</span>
-              <h3 id="modal-event-title" class="text-2xl font-black text-slate-900 font-sketch mt-0.5">Event Title</h3>
-            </div>
-          </div>
-          <button id="close-modal-btn" class="w-8 h-8 rounded-full bg-white border-2 border-slate-900 text-slate-900 font-black hover:bg-rose-200 transition">✕</button>
-        </div>
-
-        <!-- Body -->
-        <div class="p-6 overflow-y-auto space-y-5 flex-1 text-slate-800">
-          <div class="grid grid-cols-2 gap-3 text-base bg-amber-50 p-4 rounded-xl border-2 border-slate-800">
-            <div>
-              <span class="text-slate-500 block text-xs">Date & Time</span>
-              <span id="modal-event-datetime" class="font-bold text-slate-900">14 Nov, 10:00 AM</span>
-            </div>
-            <div>
-              <span class="text-slate-500 block text-xs">Campus Venue</span>
-              <span id="modal-event-venue" class="font-bold text-indigo-700">Auditorium</span>
-            </div>
-            <div>
-              <span class="text-slate-500 block text-xs">Entry Fee</span>
-              <span id="modal-event-fee" class="font-bold text-emerald-700">Free</span>
-            </div>
-            <div>
-              <span class="text-slate-500 block text-xs">Available Seats</span>
-              <span id="modal-event-seats" class="font-bold text-purple-700">50 / 100</span>
-            </div>
-          </div>
-
-          <div>
-            <h4 class="text-sm font-bold uppercase tracking-wider text-slate-600 mb-1">About This Event:</h4>
-            <p id="modal-event-description" class="text-lg text-slate-700 leading-relaxed font-doodle"></p>
-          </div>
-
-          <hr class="border-2 border-dashed border-slate-300">
-
-          <div>
-            <h4 class="text-xl font-black text-slate-900 font-sketch mb-1">Register & Get Your Stamp</h4>
-            <p class="text-sm text-slate-600 mb-3">Fill in your student credentials below.</p>
-
-            <div id="modal-alert" class="hidden mb-3 p-3 rounded-xl text-base font-bold"></div>
-
-            <form id="registration-form" class="space-y-3">
-              <input type="hidden" id="modal-event-id" value="">
-
-              <div>
-                <label class="block text-sm font-bold text-slate-700 mb-1">Student Full Name *</label>
-                <input type="text" id="reg-student-name" required placeholder="e.g. Priya Sharma" class="w-full px-3 py-1.5 rounded-xl border-2 border-slate-800 text-lg outline-none focus:ring-2 focus:ring-amber-300"/>
-                <span id="err-student-name" class="text-rose-600 text-sm hidden">Name required</span>
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-sm font-bold text-slate-700 mb-1">Roll Number *</label>
-                  <input type="text" id="reg-roll-number" required placeholder="e.g. 23CS1082" class="w-full px-3 py-1.5 rounded-xl border-2 border-slate-800 text-lg outline-none focus:ring-2 focus:ring-amber-300"/>
-                  <span id="err-roll-number" class="text-rose-600 text-sm hidden">Roll required</span>
-                </div>
-                <div>
-                  <label class="block text-sm font-bold text-slate-700 mb-1">Phone (Optional)</label>
-                  <input type="tel" id="reg-phone" placeholder="9876543210" class="w-full px-3 py-1.5 rounded-xl border-2 border-slate-800 text-lg outline-none focus:ring-2 focus:ring-amber-300"/>
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-sm font-bold text-slate-700 mb-1">College Email *</label>
-                <input type="email" id="reg-email" required placeholder="priya@college.edu" class="w-full px-3 py-1.5 rounded-xl border-2 border-slate-800 text-lg outline-none focus:ring-2 focus:ring-amber-300"/>
-                <span id="err-email" class="text-rose-600 text-sm hidden">Valid email required</span>
-              </div>
-
-              <button type="submit" id="submit-register-btn" class="w-full mt-3 py-2.5 px-4 bg-amber-300 hover:bg-amber-400 font-sketch font-bold text-xl text-slate-900 doodle-btn">
-                Confirm Registration 📌
-              </button>
-            </form>
-          </div>
+        <!-- Category Chips -->
+        <div id="category-filters" class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <button data-category="All" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-tomato text-white">
+            All
+          </button>
+          <button data-category="Technical" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-mustard">
+            Technical
+          </button>
+          <button data-category="Cultural" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-coral">
+            Cultural
+          </button>
+          <button data-category="Sports" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-sage">
+            Sports
+          </button>
+          <button data-category="Gaming" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-tangerine">
+            Gaming
+          </button>
+          <button data-category="Workshop" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-clay">
+            Workshop
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t-2 border-slate-800 py-4 text-center text-base text-slate-600 font-doodle">
-      <p>© 2026 Zenith College Fest Management System · Handcrafted Sketchbook Edition</p>
+    <!-- 4. EVENT GRID & STATUS MESSAGES -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full">
+      <!-- Status Container (Loading Skeleton / Empty / Error) -->
+      <div id="status-container" class="hidden mb-6"></div>
+
+      <!-- Events Grid: 1 col mobile, 2 col tablet, 3 col desktop -->
+      <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cards rendered dynamically by js/app.js -->
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-ink/30 py-4 text-center text-sm text-ink/75 bg-paper">
+      <p>© 2026 Zenith College Fest Management System · Hand-Drawn Sketchbook Edition</p>
     </footer>
 
+  </div>
+
+  <!-- REGISTRATION MODAL (Same validation discipline, Sketch Styling) -->
+  <div id="event-modal" class="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="sketch-card bg-paper max-w-lg w-full overflow-hidden border-2 border-ink max-h-[92vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="p-5 border-b-2 border-ink flex justify-between items-start bg-white">
+        <div class="flex items-center gap-3">
+          <span id="modal-event-icon" class="text-3xl p-1.5 rounded-lg border-2 border-ink bg-paper">⚡</span>
+          <div>
+            <span id="modal-event-category" class="inline-block text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-ink bg-mustard text-ink">
+              Category
+            </span>
+            <h3 id="modal-event-title" class="font-brush text-2xl font-bold text-ink leading-tight mt-0.5">Event Title</h3>
+          </div>
+        </div>
+        <button id="close-modal-btn" class="sketch-btn w-8 h-8 rounded-full bg-white hover:bg-tomato hover:text-white text-ink font-bold flex items-center justify-center text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-4 flex-1 text-ink">
+        <!-- Meta Details Box -->
+        <div class="grid grid-cols-2 gap-2.5 text-sm bg-white p-3.5 rounded-xl border-2 border-ink font-sans">
+          <div>
+            <span class="text-ink/60 text-xs block font-bold">DATE & TIME</span>
+            <span id="modal-event-datetime" class="font-semibold text-ink">14 Nov, 10:00 AM</span>
+          </div>
+          <div>
+            <span class="text-ink/60 text-xs block font-bold">VENUE</span>
+            <span id="modal-event-venue" class="font-semibold text-ink">Main Auditorium</span>
+          </div>
+          <div>
+            <span class="text-ink/60 text-xs block font-bold">FEE</span>
+            <span id="modal-event-fee" class="font-semibold text-ink">Free</span>
+          </div>
+          <div>
+            <span class="text-ink/60 text-xs block font-bold">AVAILABLE SEATS</span>
+            <span id="modal-event-seats" class="font-semibold text-tomato">50 / 100</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs uppercase font-bold text-ink/70 tracking-wider mb-1">About This Event</h4>
+          <p id="modal-event-description" class="text-base text-ink leading-relaxed">
+            Description will appear here.
+          </p>
+        </div>
+
+        <hr class="border-t-2 border-dashed border-ink/30">
+
+        <!-- Registration Form -->
+        <div>
+          <h4 class="font-brush text-xl font-bold text-ink mb-0.5">Register for this Event</h4>
+          <p class="text-xs text-ink/70 mb-3">Server validates roll number and email uniqueness independently.</p>
+
+          <div id="modal-alert" class="hidden mb-3 p-3 rounded-lg text-sm font-bold border-2 border-ink"></div>
+
+          <form id="registration-form" class="space-y-3">
+            <input type="hidden" id="modal-event-id" value="">
+
+            <div>
+              <label class="block text-xs font-bold text-ink uppercase mb-0.5">Student Full Name *</label>
+              <input 
+                type="text" 
+                id="reg-student-name" 
+                required 
+                placeholder="e.g. Priya Sharma" 
+                class="sketch-input w-full px-3 py-1.5 bg-white text-base text-ink"
+              />
+              <span id="err-student-name" class="text-tomato text-xs font-bold hidden mt-0.5 block">Student name is required</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-xs font-bold text-ink uppercase mb-0.5">Roll Number *</label>
+                <input 
+                  type="text" 
+                  id="reg-roll-number" 
+                  required 
+                  placeholder="e.g. 23CS1082" 
+                  class="sketch-input w-full px-3 py-1.5 bg-white text-base text-ink"
+                />
+                <span id="err-roll-number" class="text-tomato text-xs font-bold hidden mt-0.5 block">Roll number is required</span>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink uppercase mb-0.5">Phone Number (Optional)</label>
+                <input 
+                  type="tel" 
+                  id="reg-phone" 
+                  placeholder="e.g. 9876543210" 
+                  class="sketch-input w-full px-3 py-1.5 bg-white text-base text-ink"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-ink uppercase mb-0.5">College Email Address *</label>
+              <input 
+                type="email" 
+                id="reg-email" 
+                required 
+                placeholder="e.g. priya@college.edu" 
+                class="sketch-input w-full px-3 py-1.5 bg-white text-base text-ink"
+              />
+              <span id="err-email" class="text-tomato text-xs font-bold hidden mt-0.5 block">Please enter a valid email containing '@'</span>
+            </div>
+
+            <button 
+              type="submit" 
+              id="submit-register-btn"
+              class="sketch-btn w-full mt-2 py-2.5 px-4 bg-tomato hover:bg-[#d4432d] text-white font-bold text-lg font-brush tracking-wide"
+            >
+              Confirm Registration
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="/js/app.js"></script>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" width="100%" height="100%" fill="none" stroke="#2B2A28" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cat chasing Mouse line-art doodle -->
+  <!-- Cat -->
+  <path d="M40,110 Q50,70 85,80 Q105,85 110,115 Q90,130 50,125 Z" fill="#D9A58F"/>
+  <!-- Cat Ears -->
+  <polygon points="50,75 42,50 62,65" fill="#F28B82"/>
+  <polygon points="68,66 78,48 84,70" fill="#F28B82"/>
+  <!-- Cat Face -->
+  <circle cx="56" cy="80" r="2.5" fill="#2B2A28"/>
+  <circle cx="72" cy="78" r="2.5" fill="#2B2A28"/>
+  <polygon points="62,84 66,84 64,87" fill="#E5533D"/>
+  <path d="M60,89 Q64,93 68,89"/>
+  <!-- Whiskers -->
+  <path d="M42,80 L30,76 M42,84 L28,85 M78,80 L90,76 M78,84 L92,85"/>
+  <!-- Paws outstretched in chase -->
+  <ellipse cx="108" cy="115" rx="14" ry="6" fill="#D9A58F"/>
+  <ellipse cx="78" cy="126" rx="12" ry="6" fill="#D9A58F"/>
+  <!-- Tail arched -->
+  <path d="M40,115 Q20,105 18,80 Q20,65 32,70" fill="none" stroke-width="3"/>
+
+  <!-- Mouse zooming away -->
+  <ellipse cx="160" cy="120" rx="14" ry="9" fill="#F2B84B"/>
+  <circle cx="152" cy="112" r="6" fill="#F28B82"/>
+  <circle cx="168" cy="118" r="1.5" fill="#2B2A28"/>
+  <!-- Mouse tail and motion dashed marks -->
+  <path d="M146,120 Q132,118 135,110"/>
+  <!-- Speed dash lines -->
+  <path d="M125,128 L135,128 M130,133 L142,133" stroke-dasharray="3 3"/>
+</svg>

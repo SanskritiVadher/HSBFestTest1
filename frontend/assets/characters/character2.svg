@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="100%" height="100%" fill="none" stroke="#2B2A28" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Sleepy round bear hugging honey pot line-art doodle -->
+  <!-- Bear Ears -->
+  <circle cx="50" cy="42" r="10" fill="#D9A58F"/>
+  <circle cx="110" cy="42" r="10" fill="#D9A58F"/>
+  <!-- Big Round Head -->
+  <circle cx="80" cy="65" r="32" fill="#D9A58F"/>
+  <!-- Sleeping Closed Eyes (curved lines) -->
+  <path d="M64,62 Q70,67 76,62"/>
+  <path d="M84,62 Q90,67 96,62"/>
+  <!-- Snout & Nose -->
+  <ellipse cx="80" cy="74" rx="14" ry="10" fill="#FBF6EA"/>
+  <ellipse cx="80" cy="71" rx="5" ry="3.5" fill="#2B2A28"/>
+  <path d="M76,77 Q80,80 84,77"/>
+  <!-- Round Chubby Body -->
+  <ellipse cx="80" cy="115" rx="38" ry="32" fill="#D9A58F"/>
+  <!-- Honey Pot hugged in paws -->
+  <path d="M68,102 L92,102 L96,128 Q80,134 64,128 Z" fill="#F08A3C"/>
+  <ellipse cx="80" cy="102" rx="12" ry="3.5" fill="#F2B84B"/>
+  <path d="M72,108 Q80,114 88,108" fill="#F2B84B" stroke="#2B2A28"/>
+  <!-- Bear Paws hugging the pot -->
+  <ellipse cx="62" cy="112" rx="9" ry="6" fill="#D9A58F" transform="rotate(15 62 112)"/>
+  <ellipse cx="98" cy="112" rx="9" ry="6" fill="#D9A58F" transform="rotate(-15 98 112)"/>
+  <!-- Feet -->
+  <ellipse cx="56" cy="142" rx="12" ry="7" fill="#D9A58F"/>
+  <ellipse cx="104" cy="142" rx="12" ry="7" fill="#D9A58F"/>
+  <!-- Zzz marks -->
+  <path d="M120,38 L130,38 L120,48 L130,48 M132,25 L140,25 L132,33 L140,33" stroke-width="2"/>
+</svg>
