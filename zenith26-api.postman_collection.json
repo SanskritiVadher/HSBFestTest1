@@ -1,0 +1,277 @@
+{
+  "info": {
+    "_postman_id": "c1387d7b-99f8-45e0-a7d0-7e15ab67b61f",
+    "name": "Zenith '26 Fest Management System API",
+    "description": "Postman Collection for testing Zenith '26 endpoints (Events, Registrations, Stats, Admin Operations, and Stretch Goals).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "GET /api/events - List All Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/events",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/events - Filter by Category and Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/events?category=Technical&search=code",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events"],
+              "query": [
+                { "key": "category", "value": "Technical" },
+                { "key": "search", "value": "code" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/events/{event_id} - Single Event (Success)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/events/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/events/{event_id} - Event Not Found (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/events/999",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events", "999"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registrations",
+      "item": [
+        {
+          "name": "POST /api/events/{event_id}/register - Success (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_name\": \"Aarav Mehta\",\n  \"roll_number\": \"23CS1050\",\n  \"email\": \"aarav.mehta@college.edu\",\n  \"phone\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/events/1/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events", "1", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/events/{event_id}/register - Missing Required Field (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_name\": \"\",\n  \"roll_number\": \"23CS1050\",\n  \"email\": \"aarav.mehta@college.edu\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/events/1/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events", "1", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/events/{event_id}/register - Duplicate Registration (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_name\": \"Aarav Mehta\",\n  \"roll_number\": \"23CS1050\",\n  \"email\": \"aarav.mehta@college.edu\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/events/1/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events", "1", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/registrations - List All Registrations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/registrations",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "registrations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/registrations - Filter by Event ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/registrations?event_id=1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "registrations"],
+              "query": [
+                { "key": "event_id", "value": "1" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stats (Admin)",
+      "item": [
+        {
+          "name": "GET /api/stats - Live Fest Operations Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/stats",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "stats"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin & Stretch Goals",
+      "item": [
+        {
+          "name": "POST /api/events - Create New Event (Success 201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Quantum Computing Hackathon\",\n  \"category\": \"Technical\",\n  \"description\": \"Build cutting-edge quantum algorithms and circuit simulations in a 24-hour sprint.\",\n  \"event_date\": \"2026-11-15\",\n  \"event_time\": \"09:00 AM\",\n  \"venue\": \"Innovation Hub Lab 4\",\n  \"capacity\": 50,\n  \"fee\": 0,\n  \"icon\": \"⚛️\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/events",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/events - Invalid Input / Capacity <= 0 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"category\": \"Technical\",\n  \"description\": \"Invalid event test\",\n  \"event_date\": \"2026-11-15\",\n  \"event_time\": \"09:00 AM\",\n  \"venue\": \"Lab 1\",\n  \"capacity\": 0,\n  \"fee\": 0,\n  \"icon\": \"⚡\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/events",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/registrations/{id} - Cancel Registration (Success 200)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/registrations/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "registrations", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/registrations/{id} - Registration Not Found (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/registrations/9999",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "registrations", "9999"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

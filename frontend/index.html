@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenith '26 — College Fest Management Portal</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%220%22%20100%20100><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <!-- Tailwind CSS via Play CDN (for development/classroom workshop; production would use compiled CSS) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            },
+            accent: '#f43f5e'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Obsidian Graph Canvas & Glow */
+    body {
+      background-color: #0b0f19;
+      background-image: 
+        radial-gradient(circle at 20% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 80% 85%, rgba(236, 72, 153, 0.10) 0%, transparent 40%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+      color: #e2e8f0;
+    }
+
+    .obsidian-card {
+      background: rgba(17, 24, 39, 0.78);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.5), 0 0 16px rgba(99, 102, 241, 0.06);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .obsidian-card:hover {
+      border-color: rgba(129, 140, 248, 0.45);
+      box-shadow: 0 10px 30px -4px rgba(99, 102, 241, 0.22), 0 0 20px rgba(168, 85, 247, 0.18);
+      transform: translateY(-4px) scale(1.01);
+    }
+
+    .card-fade-in {
+      animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Cartoon Float & Wiggle Animations */
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(2deg); }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-6deg) scale(1.08); }
+      75% { transform: rotate(6deg) scale(1.08); }
+    }
+    @keyframes dragonSoar {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      30% { transform: translate(6px, -10px) rotate(4deg); }
+      70% { transform: translate(-6px, -5px) rotate(-3deg); }
+    }
+    @keyframes popeyeFlex {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.22) rotate(-5deg); }
+    }
+    @keyframes oswaldSquish {
+      0%, 100% { transform: scale(1, 1); }
+      50% { transform: scale(1.15, 0.88); }
+    }
+    @keyframes mrBeanBlink {
+      0%, 90%, 100% { transform: scale(1); }
+      95% { transform: scale(1.1, 0.8) rotate(10deg); }
+    }
+
+    .anim-float { animation: floaty 4s ease-in-out infinite; }
+    .anim-dragon { animation: dragonSoar 5s ease-in-out infinite; }
+    .anim-popeye:hover { animation: popeyeFlex 0.6s ease-in-out infinite; }
+    .anim-oswald { animation: oswaldSquish 3s ease-in-out infinite; }
+    .anim-bean:hover { animation: mrBeanBlink 1.2s ease-in-out infinite; }
+    .anim-wiggle:hover { animation: wiggle 0.5s ease-in-out; }
+
+    /* Custom Obsidian Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #273142; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4338ca; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Navigation Bar (Obsidian Glass) -->
+  <header class="sticky top-0 z-40 bg-[#0d121f]/85 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl filter drop-shadow anim-dragon cursor-pointer" title="Ord & Cassie say hi!">🐉</span>
+        <a href="/" class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-1.5">
+          <span class="tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">ZENITH</span>
+          <span class="text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded-lg text-lg border border-indigo-500/30 font-mono">'26</span>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-4">
+        <!-- Cartoon Fun Mascot Pills -->
+        <div class="hidden md:flex items-center gap-3 text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300">
+          <span class="anim-dragon cursor-pointer" title="Dragon Tales: I wish, I wish with all my heart!">🐲 Ord & Cassie</span>
+          <span class="text-white/20">•</span>
+          <span class="anim-popeye cursor-pointer" title="Popeye: Strong to the finich!">💪 Popeye</span>
+          <span class="text-white/20">•</span>
+          <span class="anim-oswald cursor-pointer" title="Oswald: Have a calm, wonderful day!">🐙 Oswald</span>
+          <span class="text-white/20">•</span>
+          <span class="anim-bean cursor-pointer" title="Mr. Bean & Teddy: Cheers!">🧸 Mr. Bean</span>
+        </div>
+
+        <nav class="flex items-center gap-2">
+          <a href="/" class="text-sm font-semibold text-indigo-400 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 transition-colors">
+            Graph / Events
+          </a>
+          <a href="/admin.html" class="text-sm font-semibold text-slate-300 hover:text-indigo-300 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors flex items-center gap-1.5 border border-transparent hover:border-white/10">
+            <span>Admin</span>
+            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-mono border border-indigo-500/30">Dashboard</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Cartoon Vibes & Obsidian Flow Canvas -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-[#111827] via-[#0f172a] to-[#0b0f19] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(99,102,241,0.18),transparent_60%)] pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      
+      <!-- Cartoon Interactive Banner -->
+      <div class="inline-flex flex-wrap items-center justify-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-white/5 backdrop-blur-md border border-white/15 text-indigo-200 mb-5 shadow-lg">
+        <span class="anim-dragon inline-block">🐉</span>
+        <span>Dragon Tales Magic</span>
+        <span class="text-white/30">•</span>
+        <span class="anim-popeye inline-block">⚓</span>
+        <span>Popeye Stamina</span>
+        <span class="text-white/30">•</span>
+        <span class="anim-oswald inline-block">🐙</span>
+        <span>Oswald Vibes</span>
+        <span class="text-white/30">•</span>
+        <span class="anim-bean inline-block">🚗</span>
+        <span>Mr. Bean's Fest Odyssey</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+        Explore <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-400 to-indigo-300">Zenith '26</span> Graph Flow
+      </h1>
+      <p class="mt-4 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal">
+        An Obsidian-inspired node canvas of 14 high-voltage fest events. Channel your Popeye energy, Dragon Tales spirit, and Oswald chill!
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm text-indigo-200 font-medium">
+        <div class="flex items-center gap-2 bg-white/5 px-3.5 py-1.5 rounded-xl backdrop-blur-sm border border-white/10">
+          <span>📅</span> <strong>November 14 – 15, 2026</strong>
+        </div>
+        <div class="flex items-center gap-2 bg-white/5 px-3.5 py-1.5 rounded-xl backdrop-blur-sm border border-white/10">
+          <span>📍</span> <strong>Campus Grounds & Auditoriums</strong>
+        </div>
+        <div class="flex items-center gap-2 bg-white/5 px-3.5 py-1.5 rounded-xl backdrop-blur-sm border border-white/10">
+          <span class="anim-float">✨</span> <strong>14 Interactive Nodes</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content: Obsidian Search, Category Nodes, and Cards Grid -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <!-- Search & Filter Controls (Obsidian Card Style) -->
+    <div class="obsidian-card p-4 sm:p-6 rounded-2xl mb-8 space-y-4">
+      <div class="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-md">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            🔍
+          </span>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Search events by title..." 
+            class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 text-sm outline-none transition"
+          />
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div id="category-filters" class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <button data-category="All" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-indigo-600 text-white shadow-sm shadow-indigo-200">
+            All
+          </button>
+          <button data-category="Technical" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+            💻 Technical
+          </button>
+          <button data-category="Cultural" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+            🎭 Cultural
+          </button>
+          <button data-category="Sports" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+            ⚽ Sports
+          </button>
+          <button data-category="Gaming" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+            🎮 Gaming
+          </button>
+          <button data-category="Workshop" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-100 text-slate-600 hover:bg-slate-200">
+            📐 Workshop
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Messages (Loading / Error / Empty States) -->
+    <div id="status-container" class="hidden mb-8"></div>
+
+    <!-- Events Grid -->
+    <div id="events-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Cards rendered dynamically by js/app.js -->
+    </div>
+  </main>
+
+  <!-- Event Detail & Registration Modal -->
+  <div id="event-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 max-h-[92vh] flex flex-col transform transition-all">
+      <!-- Modal Header -->
+      <div class="p-6 bg-gradient-to-r from-indigo-900 to-indigo-800 text-white relative">
+        <button id="close-modal-btn" class="absolute top-5 right-5 text-indigo-200 hover:text-white text-xl p-1 rounded-full hover:bg-white/10 transition">
+          ✕
+        </button>
+        <div class="flex items-center gap-3">
+          <span id="modal-event-icon" class="text-4xl p-2 bg-white/10 rounded-2xl backdrop-blur-md">⚡</span>
+          <div>
+            <span id="modal-event-category" class="inline-block text-[11px] font-bold uppercase tracking-wider bg-white/20 text-indigo-100 px-2 py-0.5 rounded-md mb-1">
+              Category
+            </span>
+            <h3 id="modal-event-title" class="text-xl sm:text-2xl font-bold leading-tight">Event Title</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-6 flex-1">
+        <!-- Event Meta Info -->
+        <div class="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-slate-50 p-4 rounded-2xl border border-slate-100">
+          <div>
+            <span class="text-slate-400 block font-medium">Date & Time</span>
+            <span id="modal-event-datetime" class="font-semibold text-slate-800">14 Nov, 10:00 AM</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Venue</span>
+            <span id="modal-event-venue" class="font-semibold text-slate-800">Main Auditorium</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Entry Fee</span>
+            <span id="modal-event-fee" class="font-semibold text-emerald-600">Free</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Seats Left</span>
+            <span id="modal-event-seats" class="font-semibold text-indigo-600">50 / 100</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">About This Event</h4>
+          <p id="modal-event-description" class="text-sm text-slate-600 leading-relaxed">
+            Description will appear here.
+          </p>
+        </div>
+
+        <hr class="border-slate-100">
+
+        <!-- Registration Form -->
+        <div>
+          <h4 class="text-base font-bold text-slate-900 mb-1">Register for Event</h4>
+          <p class="text-xs text-slate-500 mb-4">Ensure your roll number and college email are accurate.</p>
+
+          <!-- Inline Form Error/Success Box -->
+          <div id="modal-alert" class="hidden mb-4 p-3.5 rounded-xl text-xs font-medium"></div>
+
+          <form id="registration-form" class="space-y-3.5">
+            <input type="hidden" id="modal-event-id" value="">
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Student Full Name *</label>
+              <input 
+                type="text" 
+                id="reg-student-name" 
+                required 
+                placeholder="e.g. Priya Sharma" 
+                class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+              />
+              <span id="err-student-name" class="text-rose-500 text-[11px] hidden mt-0.5 block">Student name is required</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Roll Number *</label>
+                <input 
+                  type="text" 
+                  id="reg-roll-number" 
+                  required 
+                  placeholder="e.g. 23CS1082" 
+                  class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                />
+                <span id="err-roll-number" class="text-rose-500 text-[11px] hidden mt-0.5 block">Roll number is required</span>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number (Optional)</label>
+                <input 
+                  type="tel" 
+                  id="reg-phone" 
+                  placeholder="e.g. 9876543210" 
+                  class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">College Email Address *</label>
+              <input 
+                type="email" 
+                id="reg-email" 
+                required 
+                placeholder="e.g. priya@college.edu" 
+                class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+              />
+              <span id="err-email" class="text-rose-500 text-[11px] hidden mt-0.5 block">Please enter a valid email containing '@'</span>
+            </div>
+
+            <button 
+              type="submit" 
+              id="submit-register-btn"
+              class="w-full mt-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-semibold rounded-xl text-sm transition shadow-md shadow-indigo-200 flex items-center justify-center gap-2"
+            >
+              <span>Confirm Registration</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <p>© 2026 Zenith College Fest Management System · Built with HTML, Tailwind CSS, JavaScript & FastAPI.</p>
+  </footer>
+
+  <!-- App Script -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
