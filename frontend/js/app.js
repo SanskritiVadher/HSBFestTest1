@@ -1,7 +1,7 @@
 /**
  * Zenith '26 - Student Event Portal
- * Hand-Drawn Sketchbook Theme
- * Content-first, warm earthy palette, authentic API query integration
+ * Hand-Drawn Sketchbook Theme (Polished Interactive Edition)
+ * Space, 3-layer depth, card deal-in, stickers, rubber-stamp, easter eggs & confetti
  */
 
 const API_BASE = '/api';
@@ -25,6 +25,16 @@ const eventsGrid = document.getElementById('events-grid');
 const searchInput = document.getElementById('search-input');
 const categoryButtons = document.querySelectorAll('.filter-btn');
 const statusContainer = document.getElementById('status-container');
+const scrollProgressBar = document.getElementById('scroll-progress-bar');
+const parallaxLayer = document.getElementById('parallax-layer');
+const stickyToastContainer = document.getElementById('sticky-toast-container');
+const confettiContainer = document.getElementById('confetti-container');
+
+// Easter Egg Elements
+const heroCat = document.getElementById('hero-cat');
+const catSpeech = document.getElementById('cat-speech');
+const heroDragon = document.getElementById('hero-dragon');
+const dragonSpeech = document.getElementById('dragon-speech');
 
 // Modal Elements
 const eventModal = document.getElementById('event-modal');
@@ -46,27 +56,31 @@ const submitRegisterBtn = document.getElementById('submit-register-btn');
 document.addEventListener('DOMContentLoaded', () => {
   fetchEvents();
   setupEventListeners();
+  setupScrollEffects();
+  setupEasterEggs();
 });
 
 function setupEventListeners() {
   // Search input with debounce (re-fetches GET /api/events with search param)
-  searchInput.addEventListener('input', (e) => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      currentSearch = e.target.value.trim();
-      fetchEvents();
-    }, 280);
-  });
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        currentSearch = e.target.value.trim();
+        fetchEvents();
+      }, 260);
+    });
+  }
 
   // Category filter buttons (re-fetches GET /api/events with category param)
   categoryButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       categoryButtons.forEach((b) => {
-        b.classList.remove('bg-tomato', 'text-white');
+        b.classList.remove('bg-tomato', 'text-white', 'active-sticker');
         b.classList.add('bg-white', 'text-ink');
       });
       btn.classList.remove('bg-white', 'text-ink');
-      btn.classList.add('bg-tomato', 'text-white');
+      btn.classList.add('bg-tomato', 'text-white', 'active-sticker');
 
       currentCategory = btn.dataset.category;
       fetchEvents();
@@ -74,13 +88,130 @@ function setupEventListeners() {
   });
 
   // Modal Close
-  closeModalBtn.addEventListener('click', closeModal);
-  eventModal.addEventListener('click', (e) => {
-    if (e.target === eventModal) closeModal();
-  });
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', closeModal);
+  }
+  if (eventModal) {
+    eventModal.addEventListener('click', (e) => {
+      if (e.target === eventModal) closeModal();
+    });
+  }
 
   // Registration Form Submission
-  registrationForm.addEventListener('submit', handleRegistration);
+  if (registrationForm) {
+    registrationForm.addEventListener('submit', handleRegistration);
+  }
+}
+
+/**
+ * Depth & Scroll effects: Pencil scroll progress + lightweight middle layer parallax
+ */
+function setupScrollEffects() {
+  let isScrolling = false;
+
+  window.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        // 1. Pencil Scroll Progress Bar
+        if (scrollProgressBar) {
+          const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+          const scrollPct = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+          scrollProgressBar.style.width = `${Math.min(100, Math.max(0, scrollPct))}%`;
+        }
+
+        // 2. Middle Layer Parallax (max 20px, hardware-accelerated translate3d)
+        if (parallaxLayer && window.innerWidth >= 768) {
+          const shift = Math.min(20, window.scrollY * 0.04);
+          parallaxLayer.style.transform = `translate3d(0, ${shift}px, 0)`;
+        }
+
+        isScrolling = false;
+      });
+      isScrolling = true;
+    }
+  }, { passive: true });
+}
+
+/**
+ * Idle Easter Egg: Clicking hero characters triggers a jump and cheer speech bubble
+ */
+function setupEasterEggs() {
+  const catCheers = [
+    "Let's go! 🚀",
+    "Fest mode on! 🎈",
+    "Catch me if you can! 🐾",
+    "Rock Zenith! ⚡",
+    "Ready, set, fest! 🎨"
+  ];
+
+  const dragonCheers = [
+    "Ignite the spark! ⚡",
+    "Woohoo! 🎉",
+    "Super excited! 🌟",
+    "Unleash the energy! 💥",
+    "Full speed ahead! 🚀"
+  ];
+
+  let catTimeout = null;
+  let dragonTimeout = null;
+
+  if (heroCat && catSpeech) {
+    const triggerCat = () => {
+      const art = heroCat.querySelector('.character-art');
+      if (art) {
+        art.classList.remove('anim-easter-jump');
+        void art.offsetWidth;
+        art.classList.add('anim-easter-jump');
+      }
+
+      catSpeech.textContent = catCheers[Math.floor(Math.random() * catCheers.length)];
+      catSpeech.classList.remove('hidden', 'speech-pop');
+      void catSpeech.offsetWidth;
+      catSpeech.classList.add('speech-pop');
+
+      clearTimeout(catTimeout);
+      catTimeout = setTimeout(() => {
+        catSpeech.classList.add('hidden');
+      }, 2500);
+    };
+
+    heroCat.addEventListener('click', triggerCat);
+    heroCat.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        triggerCat();
+      }
+    });
+  }
+
+  if (heroDragon && dragonSpeech) {
+    const triggerDragon = () => {
+      const art = heroDragon.querySelector('.character-art');
+      if (art) {
+        art.classList.remove('anim-easter-jump');
+        void art.offsetWidth;
+        art.classList.add('anim-easter-jump');
+      }
+
+      dragonSpeech.textContent = dragonCheers[Math.floor(Math.random() * dragonCheers.length)];
+      dragonSpeech.classList.remove('hidden', 'speech-pop');
+      void dragonSpeech.offsetWidth;
+      dragonSpeech.classList.add('speech-pop');
+
+      clearTimeout(dragonTimeout);
+      dragonTimeout = setTimeout(() => {
+        dragonSpeech.classList.add('hidden');
+      }, 2500);
+    };
+
+    heroDragon.addEventListener('click', triggerDragon);
+    heroDragon.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        triggerDragon();
+      }
+    });
+  }
 }
 
 /**
@@ -113,6 +244,21 @@ async function fetchEvents() {
 }
 
 /**
+ * Convert time string (e.g., "10:00 AM", "02:00 PM") to minutes from midnight for sorting
+ */
+function parseTimeToMinutes(timeStr) {
+  if (!timeStr) return 0;
+  const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!match) return 0;
+  let hours = parseInt(match[1], 10);
+  const mins = parseInt(match[2], 10);
+  const meridiem = match[3].toUpperCase();
+  if (meridiem === 'PM' && hours < 12) hours += 12;
+  if (meridiem === 'AM' && hours === 12) hours = 0;
+  return hours * 60 + mins;
+}
+
+/**
  * Date formatting helper: '2026-11-14' + '10:00 AM' -> 'Sat, 14 Nov · 10:00 AM'
  */
 function formatEventDate(dateStr, timeStr) {
@@ -138,56 +284,73 @@ function formatEventDate(dateStr, timeStr) {
 }
 
 /**
- * Render cards into #events-grid
+ * Render single card markup with layered paper backing, tape/clip, seat scribble, rubber-stamp
  */
-function renderEvents(events) {
-  eventsGrid.innerHTML = '';
-  hideStatus();
+function createCardElement(event, globalIndex) {
+  const isFull = event.available_seats <= 0;
+  const feeText = event.fee === 0 ? 'Free' : `₹${event.fee}`;
+  const categoryBg = CATEGORY_COLORS[event.category] || '#D9A58F';
+  
+  // Alternating tilts & backing sheet angles
+  const tilts = [-1, 0, 1];
+  const tiltDeg = tilts[globalIndex % 3];
+  const backingRot = globalIndex % 2 === 0 ? 1.5 : -1.5;
+  const isTape = globalIndex % 2 === 0;
 
-  if (!events || events.length === 0) {
-    showEmpty();
-    return;
+  // Capacity calculation
+  const capacity = event.capacity || 100;
+  const available = Math.max(0, event.available_seats);
+  const booked = Math.max(0, capacity - available);
+  const pct = capacity > 0 ? Math.min(100, Math.round((booked / capacity) * 100)) : 100;
+
+  // Progress bar color thresholds
+  let barColor = '#8DB580'; // sage (<70%)
+  if (pct >= 90 || isFull) {
+    barColor = '#E5533D'; // tomato (>90% or full)
+  } else if (pct >= 70) {
+    barColor = '#F2B84B'; // mustard (70-90%)
   }
 
-  const tilts = ['card-tilt-left', 'card-tilt-flat', 'card-tilt-right'];
+  const formattedDate = formatEventDate(event.event_date, event.event_time);
 
-  events.forEach((event, index) => {
-    const isFull = event.available_seats <= 0;
-    const feeText = event.fee === 0 ? 'Free' : `₹${event.fee}`;
-    const categoryBg = CATEGORY_COLORS[event.category] || '#D9A58F';
-    const tiltClass = tilts[index % 3];
-    const isTape = index % 2 === 0;
+  const wrapper = document.createElement('div');
+  wrapper.className = 'card-wrapper relative card-deal-in';
+  wrapper.style.setProperty('--card-tilt', `${tiltDeg}deg`);
+  wrapper.style.setProperty('--backing-rot', `${backingRot}deg`);
+  wrapper.style.animationDelay = `${globalIndex * 60}ms`;
 
-    // Progress bar math & color thresholds:
-    // sage under 70%, mustard 70-90%, tomato over 90%
-    const capacity = event.capacity || 100;
-    const available = Math.max(0, event.available_seats);
-    const booked = Math.max(0, capacity - available);
-    const pct = capacity > 0 ? Math.min(100, Math.round((booked / capacity) * 100)) : 100;
-    
-    let barColor = '#8DB580'; // sage (<70%)
-    if (pct >= 90 || isFull) {
-      barColor = '#E5533D'; // tomato (>90% or full)
-    } else if (pct >= 70) {
-      barColor = '#F2B84B'; // mustard (70-90%)
-    }
+  wrapper.innerHTML = `
+    <!-- Layered Paper Backing Sheet (rotated 1-2 degrees in category colour) -->
+    <div 
+      class="card-backing"
+      style="background-color: ${categoryBg}; transform: rotate(${backingRot}deg) translate(3px, 4px); opacity: 0.85;"
+      aria-hidden="true"
+    ></div>
 
-    const formattedDate = formatEventDate(event.event_date, event.event_time);
-
-    const card = document.createElement('div');
-    card.className = `sketch-card p-5 flex flex-col justify-between ${tiltClass} ${isFull ? 'opacity-85 bg-[#fbf8f2]' : 'bg-white'}`;
-
-    card.innerHTML = `
+    <!-- Main Front Card Surface -->
+    <div 
+      class="sketch-card p-5 flex flex-col justify-between h-full relative z-10 transition-transform duration-200 ${
+        isFull ? 'bg-[#FAF5EA]' : 'bg-white'
+      }"
+      style="transform: rotate(${tiltDeg}deg);"
+    >
       ${isTape ? '<div class="card-tape"></div>' : '<div class="card-clip"></div>'}
-      
+
       <!-- Category top band tint -->
       <div class="h-2.5 -mx-5 -mt-5 mb-3.5 rounded-t-[12px] border-b-2 border-ink" style="background-color: ${categoryBg};"></div>
 
+      ${isFull ? `
+        <!-- Rubber-Stamp FULL slammed diagonally with thud animation -->
+        <div class="rubber-stamp select-none" aria-label="Event Full">
+          FULL
+        </div>
+      ` : ''}
+
       <div>
-        <!-- Card Top Bar: Icon, Title & Category Badge -->
+        <!-- Top Bar: Icon, Title & Category Badge -->
         <div class="flex items-start justify-between gap-2.5 mb-2.5">
           <div class="flex items-center gap-2.5">
-            <span class="text-3xl p-1.5 rounded-lg border-2 border-ink bg-paper flex-shrink-0" aria-hidden="true">
+            <span class="card-icon-art text-3xl p-1.5 rounded-lg border-2 border-ink bg-paper flex-shrink-0 select-none inline-block" aria-hidden="true">
               ${event.icon || '⚡'}
             </span>
             <div>
@@ -227,7 +390,7 @@ function renderEvents(events) {
             <span class="font-semibold truncate">${event.venue}</span>
           </div>
 
-          <!-- Seat Progress Bar Chip -->
+          <!-- Seat Progress Bar Chip with Hand-Drawn Scribble Fill -->
           <div class="p-2 rounded-lg border border-ink/40 bg-paper">
             <div class="flex items-center justify-between text-xs font-bold mb-1">
               <span class="flex items-center gap-1.5">
@@ -235,11 +398,14 @@ function renderEvents(events) {
                 <span class="text-ink/75 uppercase tracking-wide">Seats</span>
               </span>
               <span class="${isFull ? 'text-tomato font-bold' : 'text-ink font-semibold'}">
-                ${isFull ? '0 left' : `${event.available_seats} left`}
+                ${isFull ? '0 left (FULL)' : `${event.available_seats} left`}
               </span>
             </div>
             <div class="w-full h-2.5 bg-white border border-ink rounded-full overflow-hidden p-[1px]">
-              <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${barColor};"></div>
+              <div 
+                class="h-full rounded-full seat-bar-fill"
+                style="--seat-pct: ${pct}%; background-color: ${barColor};"
+              ></div>
             </div>
           </div>
         </div>
@@ -248,18 +414,89 @@ function renderEvents(events) {
       <!-- Action Button -->
       <button 
         onclick="openEventDetails(${event.id})"
+        ${isFull ? 'disabled' : ''}
         class="sketch-btn w-full py-2 px-4 rounded-xl text-lg font-brush font-bold transition flex items-center justify-center gap-1.5 ${
           isFull
-            ? 'bg-paper text-ink/70 hover:bg-white'
+            ? 'bg-paper text-ink/40 border-ink/30 cursor-not-allowed shadow-none'
             : 'bg-tomato text-white hover:bg-[#d4432d]'
         }"
       >
-        <span>${isFull ? 'View Details ✏️' : 'Register ✏️'}</span>
+        <span>${isFull ? 'Event Full 🔒' : 'Register ✏️'}</span>
       </button>
+    </div>
+  `;
+
+  return wrapper;
+}
+
+/**
+ * Render cards into #events-grid grouped under "Day 1 - Sat 14 Nov" and "Day 2 - Sun 15 Nov"
+ */
+function renderEvents(events) {
+  eventsGrid.innerHTML = '';
+  hideStatus();
+
+  if (!events || events.length === 0) {
+    showEmpty();
+    return;
+  }
+
+  // Display grouping: Day 1 (2026-11-14) and Day 2 (2026-11-15)
+  const day1Events = events.filter((e) => e.event_date === '2026-11-14');
+  const day2Events = events.filter((e) => e.event_date === '2026-11-15');
+  const otherEvents = events.filter((e) => e.event_date !== '2026-11-14' && e.event_date !== '2026-11-15');
+
+  // Sort each day chronologically by event_time
+  day1Events.sort((a, b) => parseTimeToMinutes(a.event_time) - parseTimeToMinutes(b.event_time));
+  day2Events.sort((a, b) => parseTimeToMinutes(a.event_time) - parseTimeToMinutes(b.event_time));
+  otherEvents.sort((a, b) => parseTimeToMinutes(a.event_time) - parseTimeToMinutes(b.event_time));
+
+  let globalCardIndex = 0;
+
+  // Helper to render a Day Section
+  const renderDaySection = (title, count, eventList, badgeBg) => {
+    if (eventList.length === 0) return;
+
+    const section = document.createElement('section');
+    section.className = 'day-group space-y-6';
+
+    section.innerHTML = `
+      <!-- Sketch-banner heading with hand-drawn underline -->
+      <div class="day-banner inline-block">
+        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          <span class="text-2xl sm:text-3xl" aria-hidden="true">📅</span>
+          <h2 class="font-brush text-3xl sm:text-4xl font-bold text-ink tracking-tight">${title}</h2>
+          <span class="text-xs uppercase font-sans font-bold px-2 py-0.5 rounded border border-ink text-ink ml-1 shadow-sm" style="background-color: ${badgeBg};">
+            ${count} ${count === 1 ? 'event' : 'events'}
+          </span>
+        </div>
+        <!-- Hand-Drawn Underline SVG -->
+        <svg class="w-52 sm:w-72 h-3.5 text-tomato mt-1" viewBox="0 0 240 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+          <path d="M 4 8 Q 60 2 120 7 T 236 4" />
+        </svg>
+      </div>
+
+      <!-- Card Grid: 1 col mobile, 2 col tablet, 3 col desktop with 40px gap -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <!-- Cards will be appended here -->
+      </div>
     `;
 
-    eventsGrid.appendChild(card);
-  });
+    const gridContainer = section.querySelector('.grid');
+    eventList.forEach((ev) => {
+      const card = createCardElement(ev, globalCardIndex++);
+      gridContainer.appendChild(card);
+    });
+
+    eventsGrid.appendChild(section);
+  };
+
+  // Render Day 1 & Day 2 sections
+  renderDaySection('Day 1 — Sat 14 Nov', day1Events.length, day1Events, '#F2B84B');
+  renderDaySection('Day 2 — Sun 15 Nov', day2Events.length, day2Events, '#F28B82');
+  if (otherEvents.length > 0) {
+    renderDaySection('Special Sessions & Workshops', otherEvents.length, otherEvents, '#D9A58F');
+  }
 }
 
 /**
@@ -304,7 +541,83 @@ window.openEventDetails = async function(eventId) {
 };
 
 function closeModal() {
-  eventModal.classList.add('hidden');
+  if (eventModal) {
+    eventModal.classList.add('hidden');
+  }
+}
+
+/**
+ * Trigger paper-confetti burst (30 pieces, 1.5s) in palette colours
+ */
+function triggerConfetti() {
+  if (!confettiContainer) return;
+  confettiContainer.innerHTML = '';
+
+  const palette = ['#E5533D', '#F2B84B', '#F28B82', '#8DB580', '#F08A3C', '#D9A58F'];
+  const count = 30;
+
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+
+    const bg = palette[Math.floor(Math.random() * palette.length)];
+    const leftPct = Math.random() * 96 + 2; // 2% to 98%
+    const sizeW = Math.floor(Math.random() * 8) + 8; // 8px to 16px
+    const sizeH = Math.floor(Math.random() * 10) + 8; // 8px to 18px
+    const delay = Math.random() * 0.3; // 0 to 0.3s
+    const rot = Math.random() * 360;
+
+    piece.style.backgroundColor = bg;
+    piece.style.left = `${leftPct}vw`;
+    piece.style.top = `${Math.random() * 20 + 10}vh`;
+    piece.style.width = `${sizeW}px`;
+    piece.style.height = `${sizeH}px`;
+    piece.style.border = '1px solid #2B2A28';
+    piece.style.borderRadius = i % 3 === 0 ? '50%' : '2px';
+    piece.style.transform = `rotate(${rot}deg)`;
+    piece.style.animationDelay = `${delay}s`;
+
+    confettiContainer.appendChild(piece);
+  }
+
+  setTimeout(() => {
+    confettiContainer.innerHTML = '';
+  }, 1600);
+}
+
+/**
+ * Show sticky-note toast notification
+ */
+function showStickyToast(eventTitle) {
+  if (!stickyToastContainer) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'bg-[#FFF8DE] border-2 border-ink p-4 rounded-lg shadow-[4px_4px_0_var(--ink)] max-w-sm relative transition-all duration-300 pointer-events-auto transform rotate-1';
+  
+  toast.innerHTML = `
+    <!-- Tape strip doodle -->
+    <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 bg-[#F2B84B]/80 border border-dashed border-ink rounded-sm -rotate-1 pointer-events-none"></div>
+    <div class="flex items-start gap-2.5">
+      <span class="text-2xl select-none" aria-hidden="true">🎉</span>
+      <div>
+        <h4 class="font-brush text-xl font-bold text-ink">You're in!</h4>
+        <p class="font-hand text-base text-ink font-semibold">
+          See you at <span class="underline decoration-tomato decoration-2 font-bold">${eventTitle}</span>!
+        </p>
+      </div>
+    </div>
+  `;
+
+  stickyToastContainer.innerHTML = '';
+  stickyToastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-10px) rotate(1deg)';
+    setTimeout(() => {
+      if (toast.parentElement) toast.remove();
+    }, 300);
+  }, 3500);
 }
 
 /**
@@ -320,6 +633,7 @@ async function handleRegistration(e) {
   const rollNumber = document.getElementById('reg-roll-number').value.trim();
   const email = document.getElementById('reg-email').value.trim();
   const phone = document.getElementById('reg-phone').value.trim();
+  const currentTitle = modalEventTitle.textContent || 'Event';
 
   // Basic client-side checks
   let hasError = false;
@@ -357,20 +671,17 @@ async function handleRegistration(e) {
     const data = await res.json();
 
     if (res.status === 201) {
-      showModalAlert(
-        `Registered successfully for ${modalEventTitle.textContent}! Pass ID: #${data.id}`,
-        'success'
-      );
       registrationForm.reset();
+      closeModal();
+
+      // Trigger celebration: Confetti burst + Sticky-note toast
+      triggerConfetti();
+      showStickyToast(currentTitle);
 
       // Refresh event cards immediately
       await fetchEvents();
-
-      // Close modal after a moment
-      setTimeout(() => {
-        closeModal();
-      }, 1600);
     } else {
+      // Server error shown as a torn red note inside the form
       const errorMsg = data.detail || 'Registration failed. Please check your details.';
       showModalAlert(errorMsg, 'error');
     }
@@ -382,16 +693,11 @@ async function handleRegistration(e) {
   }
 }
 
-// Helpers for inline alerts and UI states
+// Helpers for inline alerts and UI states (Torn note error styling)
 function showModalAlert(message, type) {
   modalAlert.textContent = message;
-  modalAlert.classList.remove('hidden', 'bg-sage/30', 'text-ink', 'bg-tomato/20', 'text-tomato');
-
-  if (type === 'success') {
-    modalAlert.classList.add('bg-sage/30', 'text-ink');
-  } else {
-    modalAlert.classList.add('bg-tomato/20', 'text-tomato');
-  }
+  modalAlert.className = 'mb-3 p-3.5 rounded-lg text-base font-hand font-bold border-2 border-dashed border-tomato bg-[#FBF6EA] text-tomato relative shadow-[2px_2px_0_#E5533D]';
+  modalAlert.classList.remove('hidden');
 }
 
 function clearModalAlert() {
@@ -445,13 +751,13 @@ function showEmpty() {
 window.clearFilters = function() {
   currentCategory = 'All';
   currentSearch = '';
-  searchInput.value = '';
+  if (searchInput) searchInput.value = '';
   categoryButtons.forEach((b) => {
-    b.classList.remove('bg-tomato', 'text-white');
+    b.classList.remove('bg-tomato', 'text-white', 'active-sticker');
     b.classList.add('bg-white', 'text-ink');
     if (b.dataset.category === 'All') {
       b.classList.remove('bg-white', 'text-ink');
-      b.classList.add('bg-tomato', 'text-white');
+      b.classList.add('bg-tomato', 'text-white', 'active-sticker');
     }
   });
   fetchEvents();
@@ -475,5 +781,7 @@ function showError(msg) {
 }
 
 function hideStatus() {
-  statusContainer.classList.add('hidden');
+  if (statusContainer) {
+    statusContainer.classList.add('hidden');
+  }
 }

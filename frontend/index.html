@@ -70,9 +70,50 @@
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
-    .sketch-card:hover {
-      transform: translateY(-2px);
+
+    /* Card Wrapper & Layered Paper Effect (peeking backing sheet) */
+    .card-wrapper {
+      position: relative;
+    }
+    .card-backing {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px 6px 16px 8px;
+      border: 2px solid var(--ink);
+      z-index: 0;
+      pointer-events: none;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-wrapper:hover .sketch-card {
+      transform: translateY(-5px) rotate(calc(var(--card-tilt, 0deg) + 1deg)) !important;
       box-shadow: 6px 6px 0 var(--ink);
+    }
+    .card-wrapper:hover .card-backing {
+      transform: rotate(calc(var(--backing-rot, 1.5deg) + 0.5deg)) translate(4px, 5px) !important;
+    }
+    .card-wrapper:hover .card-icon-art {
+      animation: iconWiggle 0.4s ease-in-out;
+    }
+
+    @keyframes iconWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-10deg) scale(1.1); }
+      75% { transform: rotate(10deg) scale(1.1); }
+    }
+
+    /* Card Deal-in animation (staggered 60ms) */
+    @keyframes dealIn {
+      0% {
+        opacity: 0;
+        transform: translateY(22px) rotate(calc(var(--card-tilt, 0deg) - 2deg));
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotate(var(--card-tilt, 0deg));
+      }
+    }
+    .card-deal-in {
+      animation: dealIn 0.36s cubic-bezier(0.16, 1, 0.3, 1) backwards;
     }
 
     /* Sketch Button */
@@ -103,34 +144,136 @@
       box-shadow: 0 0 0 2px var(--mustard);
     }
 
-    /* Character Bobbing & Floating Animations */
+    /* Category Chips as Stickers */
+    .filter-btn {
+      border: 2px solid var(--ink);
+      border-radius: 12px 16px 10px 14px;
+      box-shadow: 2.5px 2.5px 0 var(--ink);
+      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease, background-color 0.15s ease;
+      transform: rotate(0deg);
+    }
+    .filter-btn:hover {
+      transform: translateY(-1.5px) rotate(-1deg);
+      box-shadow: 3.5px 3.5px 0 var(--ink);
+    }
+    .filter-btn.active-sticker {
+      transform: rotate(-2deg) scale(1.04);
+      box-shadow: inset 2px 2px 0 var(--ink), 1px 1px 0 var(--ink);
+    }
+
+    /* Rubber-Stamp FULL Slam Animation */
+    .rubber-stamp {
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      border: 3.5px dashed var(--tomato);
+      color: var(--tomato);
+      font-family: 'Caveat Brush', cursive, sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      padding: 2px 18px;
+      border-radius: 8px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(251, 246, 234, 0.94);
+      box-shadow: 0 0 0 2px rgba(229, 83, 61, 0.2);
+      pointer-events: none;
+      z-index: 25;
+      animation: stampSlam 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes stampSlam {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2.4) rotate(-25deg);
+      }
+      65% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.92) rotate(-13deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(-15deg);
+      }
+    }
+
+    /* Seat Bar Scribble Fill */
+    @keyframes seatFill {
+      0% { width: 0%; opacity: 0.6; }
+      100% { width: var(--seat-pct); opacity: 1; }
+    }
+    .seat-bar-fill {
+      animation: seatFill 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(43, 42, 40, 0.12) 3px, rgba(43, 42, 40, 0.12) 6px);
+    }
+
+    /* Continuous Looping Animations (STRICT LIMIT: MAXIMUM 3 VISIBLE AT ONCE) */
+    /* 1 & 2: Hero Left & Right Bobbing */
     @keyframes heroBob {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(1.5deg); }
+      50% { transform: translateY(-7px) rotate(1.2deg); }
     }
-    @keyframes kiteSway {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-6px) rotate(-2deg); }
-    }
-    @keyframes bearPeek {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-5px); }
-    }
-    @keyframes skateAcross {
-      0% { transform: translateX(-120px) rotate(1deg); }
-      50% { transform: translateX(calc(100vw + 60px)) rotate(-1deg); }
-      50.01% { transform: translateX(calc(100vw + 60px)) scaleX(-1); }
-      100% { transform: translateX(-120px) scaleX(-1); }
+    .anim-hero-bob {
+      animation: heroBob 5s ease-in-out infinite;
     }
 
-    .anim-hero-bob { animation: heroBob 5s ease-in-out infinite; }
-    .anim-kite-sway { animation: kiteSway 6s ease-in-out infinite; }
-    .anim-bear-peek { animation: bearPeek 4s ease-in-out infinite; }
-    .anim-skater { animation: skateAcross 36s linear infinite; }
+    /* 3: Faint Clouds / Stars Drifting */
+    @keyframes cloudDrift {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(24px, -6px); }
+    }
+    .anim-cloud-drift {
+      animation: cloudDrift 28s ease-in-out infinite;
+    }
 
+    /* Idle Easter Egg: Character Jump & Speech Pop */
+    @keyframes characterJump {
+      0%, 100% { transform: translateY(0) scale(1); }
+      35% { transform: translateY(-16px) scale(1.08); }
+      60% { transform: translateY(-6px) scale(1.03); }
+    }
+    .anim-easter-jump {
+      animation: characterJump 0.5s ease-out;
+    }
+
+    @keyframes speechPop {
+      0% { opacity: 0; transform: scale(0.6) translateY(10px); }
+      70% { opacity: 1; transform: scale(1.08) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .speech-pop {
+      animation: speechPop 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Confetti Burst */
+    @keyframes confettiFlutter {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(180px) rotate(360deg) scale(0.6);
+      }
+    }
+    .confetti-piece {
+      position: absolute;
+      pointer-events: none;
+      z-index: 100;
+      animation: confettiFlutter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    /* Prefers-reduced-motion: All Motion Off */
     @media (prefers-reduced-motion: reduce) {
-      .anim-hero-bob, .anim-kite-sway, .anim-bear-peek, .anim-skater {
+      *, ::before, ::after {
         animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+      .card-deal-in, .rubber-stamp, .seat-bar-fill, .anim-hero-bob, .anim-cloud-drift {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
       }
     }
 
@@ -177,7 +320,7 @@
       background-color: rgba(242, 184, 75, 0.7);
       border: 1px dashed var(--ink);
       border-radius: 2px;
-      z-index: 10;
+      z-index: 15;
       pointer-events: none;
     }
 
@@ -190,18 +333,9 @@
       height: 24px;
       border: 2px solid var(--ink);
       border-radius: 8px;
-      z-index: 10;
+      z-index: 15;
       pointer-events: none;
       background: transparent;
-    }
-
-    /* Alternating Card Tilts */
-    .card-tilt-left { transform: rotate(-1deg); }
-    .card-tilt-right { transform: rotate(1deg); }
-    .card-tilt-flat { transform: rotate(0deg); }
-
-    .card-tilt-left:hover, .card-tilt-right:hover, .card-tilt-flat:hover {
-      transform: translateY(-3px) rotate(0deg);
     }
 
     /* Custom Scrollbar */
@@ -214,20 +348,51 @@
 <body class="min-h-screen relative flex flex-col">
 
   <!-- ============================================== -->
-  <!-- FAINT BACKGROUND TEXTURE (10% OPACITY CHARACTERS) -->
+  <!-- 1. BACK LAYER: FAINT DRIFTING CLOUDS & STARS (HIDDEN ON MOBILE) -->
   <!-- ============================================== -->
-  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <img src="/assets/characters/character2.svg" alt="" class="absolute top-[35%] -left-12 w-56 opacity-10" />
-    <img src="/assets/characters/character5.svg" alt="" class="absolute top-[60%] -right-12 w-52 opacity-10" />
-    <img src="/assets/characters/character6.svg" alt="" class="absolute bottom-10 left-1/4 w-52 opacity-10" />
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block" aria-hidden="true">
+    <div class="anim-cloud-drift absolute top-20 left-10 opacity-15">
+      <svg width="120" height="60" viewBox="0 0 120 60" fill="none" stroke="#2B2A28" stroke-width="2" stroke-linecap="round">
+        <path d="M20 45 C10 45, 5 35, 15 25 C15 12, 35 10, 45 18 C55 8, 80 8, 85 20 C95 18, 110 25, 105 38 C115 45, 105 52, 95 50 Z" fill="#FFFFFF"/>
+      </svg>
+    </div>
+    <div class="anim-cloud-drift absolute top-1/3 right-14 opacity-12" style="animation-delay: -14s;">
+      <svg width="140" height="70" viewBox="0 0 140 70" fill="none" stroke="#2B2A28" stroke-width="2" stroke-linecap="round">
+        <path d="M25 50 C12 50, 8 40, 18 30 C18 15, 42 12, 54 22 C66 10, 96 10, 102 24 C114 22, 130 30, 126 44 C136 52, 126 60, 114 58 Z" fill="#FFFFFF"/>
+      </svg>
+    </div>
+    <div class="anim-cloud-drift absolute bottom-48 left-1/4 opacity-15" style="animation-delay: -20s;">
+      <svg width="110" height="50" viewBox="0 0 110 50" fill="none" stroke="#2B2A28" stroke-width="2">
+        <path d="M15 10 L18 16 L24 16 L19 20 L21 26 L15 22 L9 26 L11 20 L6 16 L12 16 Z" fill="#F2B84B"/>
+        <path d="M75 25 L77 29 L82 29 L78 32 L80 36 L75 33 L70 36 L72 32 L68 29 L73 29 Z" fill="#F28B82"/>
+        <path d="M45 35 Q50 28 55 35 T 65 35" stroke-linecap="round"/>
+      </svg>
+    </div>
   </div>
 
-  <!-- FOREGROUND INTERACTIVE CONTENT -->
+  <!-- ============================================== -->
+  <!-- 2. MIDDLE LAYER: FAINT WATERMARKS WITH LIGHT PARALLAX SHIFT (MAX 20px) -->
+  <!-- ============================================== -->
+  <div id="parallax-layer" class="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden md:block" aria-hidden="true">
+    <img src="/assets/characters/character2.svg" alt="" class="absolute top-[38%] -left-12 w-56 opacity-10" />
+    <img src="/assets/characters/character5.svg" alt="" class="absolute top-[62%] -right-12 w-52 opacity-10" />
+    <img src="/assets/characters/character6.svg" alt="" class="absolute bottom-16 left-1/3 w-52 opacity-10" />
+  </div>
+
+  <!-- STICKY TOAST NOTIFICATION CONTAINER -->
+  <div id="sticky-toast-container" class="fixed top-20 right-4 sm:right-8 z-50 pointer-events-none"></div>
+
+  <!-- CONFETTI BURST CONTAINER -->
+  <div id="confetti-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden" aria-hidden="true"></div>
+
+  <!-- ============================================== -->
+  <!-- 3. FRONT LAYER: FOREGROUND INTERACTIVE CONTENT -->
+  <!-- ============================================== -->
   <div class="relative z-10 flex flex-col flex-grow">
 
     <!-- 1. SLIM STICKY NAVBAR -->
     <header class="sticky top-0 z-40 bg-[#FBF6EA]/95 backdrop-blur-sm border-b-2 border-ink shadow-sm">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <div class="max-w-[1280px] mx-auto px-4 sm:px-8 h-14 flex items-center justify-between">
         <a href="/" class="flex items-center gap-2 group">
           <span class="text-xl">⚡</span>
           <span class="font-brush text-2xl sm:text-3xl font-bold tracking-tight text-ink group-hover:text-tomato transition">
@@ -239,20 +404,34 @@
           <span class="text-xs">→</span>
         </a>
       </div>
+      <!-- Pencil-shaped scroll progress bar -->
+      <div class="relative w-full h-1.5 bg-paper border-t border-ink/20 overflow-visible" aria-hidden="true">
+        <div id="scroll-progress-bar" class="h-full bg-ink relative transition-all duration-75 ease-out" style="width: 0%;">
+          <div class="absolute -right-2.5 -top-2 text-xs select-none pointer-events-none transform -rotate-45" style="filter: drop-shadow(1px 1px 0 #2B2A28);">
+            ✏️
+          </div>
+        </div>
+      </div>
     </header>
 
-    <!-- 2. EXPANDED HERO SECTION (~280-320px) WITH 2 LARGE FLANKING CHARACTERS -->
-    <section class="max-w-6xl mx-auto px-1 sm:px-6 pt-3 pb-2 relative flex flex-col items-center justify-center min-h-[190px] md:min-h-[290px]">
+    <!-- 2. EXPANDED HERO SECTION (Roomy padding, never touches characters) -->
+    <section class="max-w-[1280px] mx-auto px-4 sm:px-8 pt-6 pb-4 md:pt-10 md:pb-8 relative flex flex-col items-center justify-center min-h-[190px] md:min-h-[280px]">
       
-      <!-- HERO LEFT CHARACTER: Scheming Cat chasing mouse (100% Opacity, ~180px tall on desktop, ~60px on mobile) -->
-      <div class="absolute left-1 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 pointer-events-none anim-hero-bob select-none z-10 w-[58px] sm:w-[110px] md:w-[185px]" aria-hidden="true">
-        <img src="/assets/characters/character1.svg" alt="" class="w-full h-auto object-contain drop-shadow-sm" />
+      <!-- HERO LEFT CHARACTER: Scheming Cat chasing mouse (Interactive Easter Egg Click) -->
+      <div id="hero-cat" class="absolute left-2 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 select-none z-20 w-[58px] sm:w-[110px] md:w-[185px] cursor-pointer group" role="button" aria-label="Cheer with fest mascot" tabindex="0">
+        <!-- Speech Bubble -->
+        <div id="cat-speech" class="speech-bubble hidden absolute -top-11 left-6 md:left-20 bg-white border-2 border-ink px-3 py-0.5 rounded-xl shadow-[3px_3px_0_var(--ink)] font-brush text-sm sm:text-base text-ink whitespace-nowrap z-30 pointer-events-none">
+          Let's go! 🚀
+        </div>
+        <div class="anim-hero-bob character-art">
+          <img src="/assets/characters/character1.svg" alt="" class="w-full h-auto object-contain drop-shadow-sm" />
+        </div>
       </div>
 
       <!-- HERO CENTER CONTENT -->
-      <div class="text-center px-14 sm:px-28 md:px-48 max-w-3xl z-20">
+      <div class="text-center px-16 sm:px-28 md:px-48 max-w-3xl z-20">
         <!-- Ticket-stub badge -->
-        <div class="mb-1 inline-block">
+        <div class="mb-1.5 inline-block">
           <span class="ticket-stub font-sans text-xs sm:text-sm font-black text-ink uppercase tracking-wider">
             🎟️ 14–15 NOV 2026
           </span>
@@ -269,7 +448,7 @@
           </svg>
         </div>
 
-        <p class="text-xs sm:text-base md:text-lg text-ink font-semibold mt-0.5 leading-snug max-w-[210px] sm:max-w-xl mx-auto">
+        <p class="text-xs sm:text-base md:text-lg text-ink font-semibold mt-0.5 leading-snug max-w-[220px] sm:max-w-xl mx-auto">
           48 Hours of Energy, Innovation & Rivalry across Campus Auditoriums.
         </p>
 
@@ -281,16 +460,22 @@
         </div>
       </div>
 
-      <!-- HERO RIGHT CHARACTER: Cheerful Dragon blowing a star (100% Opacity, ~180px tall on desktop, ~60px on mobile) -->
-      <div class="absolute right-1 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 pointer-events-none anim-hero-bob select-none z-10 w-[58px] sm:w-[110px] md:w-[185px]" aria-hidden="true">
-        <img src="/assets/characters/character5.svg" alt="" class="w-full h-auto object-contain drop-shadow-sm" />
+      <!-- HERO RIGHT CHARACTER: Cheerful Dragon blowing a star (Interactive Easter Egg Click) -->
+      <div id="hero-dragon" class="absolute right-2 sm:right-4 md:right-8 top-1/2 -translate-y-1/2 select-none z-20 w-[58px] sm:w-[110px] md:w-[185px] cursor-pointer group" role="button" aria-label="Cheer with fest mascot" tabindex="0">
+        <!-- Speech Bubble -->
+        <div id="dragon-speech" class="speech-bubble hidden absolute -top-11 right-6 md:right-20 bg-white border-2 border-ink px-3 py-0.5 rounded-xl shadow-[3px_3px_0_var(--ink)] font-brush text-sm sm:text-base text-ink whitespace-nowrap z-30 pointer-events-none">
+          Ignite the spark! ⚡
+        </div>
+        <div class="anim-hero-bob character-art">
+          <img src="/assets/characters/character5.svg" alt="" class="w-full h-auto object-contain drop-shadow-sm" />
+        </div>
       </div>
 
     </section>
 
     <!-- 3. STICKY TOOLBAR (Search + Category Filter Chips + Kid with Kite) -->
-    <div class="sticky top-14 z-30 bg-[#FBF6EA]/95 backdrop-blur-sm border-y border-ink/40 py-2.5 shadow-sm relative">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between relative">
+    <div class="sticky top-14 z-30 bg-[#FBF6EA]/95 backdrop-blur-sm border-y border-ink/40 py-3 shadow-sm relative">
+      <div class="max-w-[1280px] mx-auto px-4 sm:px-8 flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between relative">
         
         <!-- Search Input -->
         <div class="relative flex-1 max-w-sm">
@@ -305,57 +490,57 @@
           />
         </div>
 
-        <!-- Category Chips -->
-        <div id="category-filters" class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <button data-category="All" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-tomato text-white">
+        <!-- Category Chips as Stickers -->
+        <div id="category-filters" class="flex flex-wrap items-center gap-2">
+          <button data-category="All" class="filter-btn sketch-btn px-3.5 py-1 text-sm font-bold bg-tomato text-white active-sticker">
             All
           </button>
-          <button data-category="Technical" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-mustard">
+          <button data-category="Technical" class="filter-btn sketch-btn px-3.5 py-1 text-sm font-bold bg-white text-ink hover:bg-mustard">
             Technical
           </button>
-          <button data-category="Cultural" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-coral">
+          <button data-category="Cultural" class="filter-btn sketch-btn px-3.5 py-1 text-sm font-bold bg-white text-ink hover:bg-coral">
             Cultural
           </button>
-          <button data-category="Sports" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-sage">
+          <button data-category="Sports" class="filter-btn sketch-btn px-3.5 py-1 text-sm font-bold bg-white text-ink hover:bg-sage">
             Sports
           </button>
-          <button data-category="Gaming" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-tangerine">
+          <button data-category="Gaming" class="filter-btn sketch-btn px-3.5 py-1 text-sm font-bold bg-white text-ink hover:bg-tangerine">
             Gaming
           </button>
-          <button data-category="Workshop" class="filter-btn sketch-btn px-3 py-1 text-sm font-bold bg-white text-ink hover:bg-clay">
+          <button data-category="Workshop" class="filter-btn sketch-btn px-3.5 py-1 text-sm font-bold bg-white text-ink hover:bg-clay">
             Workshop
           </button>
         </div>
 
-        <!-- Kid with Kite sitting at top-right of toolbar (hidden on mobile <768px) -->
-        <div class="hidden md:block absolute -top-14 right-2 pointer-events-none anim-kite-sway z-40" aria-hidden="true">
+        <!-- Kid with Kite sitting at top-right of toolbar (hidden on mobile <768px, static doodle to keep loop limit) -->
+        <div class="hidden md:block absolute -top-14 right-4 pointer-events-none z-40" aria-hidden="true">
           <img src="/assets/characters/character3.svg" alt="" class="w-28 h-28 object-contain" />
         </div>
 
       </div>
     </div>
 
-    <!-- 4. EVENT GRID & STATUS MESSAGES -->
-    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full relative">
+    <!-- 4. EVENT GRID CONTAINER & STATUS MESSAGES -->
+    <main class="flex-grow max-w-[1280px] mx-auto px-4 sm:px-8 py-8 w-full relative">
       
       <!-- Peeking Bear behind top edge of the first card row (hidden on mobile <768px) -->
-      <div class="hidden md:block absolute -top-12 left-10 pointer-events-none anim-bear-peek z-0" aria-hidden="true">
-        <img src="/assets/characters/character2.svg" alt="" class="w-28 h-28 object-contain" />
+      <div class="hidden md:block absolute -top-10 right-14 pointer-events-none z-0" aria-hidden="true">
+        <img src="/assets/characters/character2.svg" alt="" class="w-24 h-24 object-contain" />
       </div>
 
       <!-- Status Container (Loading Skeleton / Empty / Error) -->
-      <div id="status-container" class="hidden mb-6 relative z-10"></div>
+      <div id="status-container" class="hidden mb-8 relative z-10"></div>
 
-      <!-- Events Grid: 1 col mobile, 2 col tablet, 3 col desktop -->
-      <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-        <!-- Cards rendered dynamically by js/app.js -->
+      <!-- Events Container: Dynamically populated with Day 1 & Day 2 Groups -->
+      <div id="events-grid" class="relative z-10 space-y-12">
+        <!-- Rendered dynamically by js/app.js -->
       </div>
     </main>
 
-    <!-- Skateboard Penguin skating across the bottom on a loop (hidden on mobile <768px) -->
-    <div class="hidden md:block w-full overflow-hidden pointer-events-none relative h-16 -mt-4 z-20" aria-hidden="true">
-      <div class="anim-skater absolute bottom-0 left-0">
-        <img src="/assets/characters/character4.svg" alt="" class="w-20 h-20 object-contain" />
+    <!-- Skateboard Penguin at the bottom (static doodle with dashed line) -->
+    <div class="hidden md:block w-full overflow-hidden pointer-events-none relative h-16 z-20" aria-hidden="true">
+      <div class="absolute bottom-0 right-12">
+        <img src="/assets/characters/character4.svg" alt="" class="w-18 h-18 object-contain" />
       </div>
       <div class="w-full border-b border-dashed border-ink/40 absolute bottom-3"></div>
     </div>
