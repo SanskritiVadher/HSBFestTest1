@@ -1,7 +1,7 @@
 /**
  * Zenith '26 - Student Event Portal
- * Neon Cyber Theme (Neon Green, Cyan Blue, Purple)
- * Interactive Fullscreen Background Spatial Map & Dancing Cartoon Characters
+ * Hand-Drawn Sketch & Doodle Theme
+ * Background Campus Map Interaction, Roaming Character SVGs, and Passport Flow
  */
 
 const API_BASE = '/api';
@@ -62,11 +62,11 @@ function setupEventListeners() {
   categoryButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       categoryButtons.forEach((b) => {
-        b.classList.remove('bg-gradient-to-r', 'from-neonGreen', 'to-neonCyan', 'text-black', 'shadow-lg');
-        b.classList.add('bg-black/50', 'text-slate-300');
+        b.classList.remove('bg-amber-300', 'text-slate-900');
+        b.classList.add('bg-white', 'text-slate-800');
       });
-      btn.classList.remove('bg-black/50', 'text-slate-300');
-      btn.classList.add('bg-gradient-to-r', 'from-neonGreen', 'to-neonCyan', 'text-black', 'shadow-lg');
+      btn.classList.remove('bg-white', 'text-slate-800');
+      btn.classList.add('bg-amber-300', 'text-slate-900');
 
       currentCategory = btn.dataset.category;
       fetchEvents();
@@ -86,12 +86,12 @@ function setupEventListeners() {
 function setupPersonalizedGreeting() {
   const rememberedName = localStorage.getItem('zenith_student_name');
   if (rememberedName) {
-    greetingText.textContent = `Welcome back, ${rememberedName}! 🎈`;
+    greetingText.textContent = `Hi, ${rememberedName}! ✏️`;
   }
 }
 
 /**
- * Global function called when user clicks pins on the interactive background spatial map
+ * Filter by clicking on the background campus map pins
  */
 window.filterByVenue = function(venueName) {
   currentVenue = venueName;
@@ -100,7 +100,6 @@ window.filterByVenue = function(venueName) {
     activeVenuePill.classList.remove('hidden');
   }
   applyFilters();
-  // Scroll down smoothly to events section
   const eventsSec = document.getElementById('events-section');
   if (eventsSec) {
     eventsSec.scrollIntoView({ behavior: 'smooth' });
@@ -120,14 +119,14 @@ window.scrollToBgMap = function() {
 };
 
 /**
- * Interactive Character Cheer Click triggers
+ * Character Cheer Triggers
  */
 window.characterCheer = function(type) {
   const cheers = {
-    dragon: "Ord: 'I wish, I wish with all my heart to fly with friends in dragon land!' 🐉✨",
-    popeye: "Popeye: 'I yam what I yam, an' that's all what I yam! Strong with fest spinach!' 💪⚓",
-    oswald: "Oswald: 'Hello friend! Let's go on a calm, wonderful festival stroll with Weenie & Henry!' 🐙🎺",
-    bean: "Mr. Bean: 'Brilliant! Teddy, look at all these competitions!' 🧸🚗"
+    dragon: "Ord: 'I wish, I wish with all my heart to make great memories at this fest!' 🐲✨",
+    popeye: "Popeye: 'I yam what I yam! Strong to the finich with fest energy!' 💪⚓",
+    oswald: "Oswald: 'Hello friend! Let's have a calm and musical day together!' 🐙🎶",
+    bean: "Teddy: 'Cheers and congratulations on joining the fest!' 🧸🚗"
   };
   alert(cheers[type] || "Fest cheer!");
 };
@@ -158,7 +157,7 @@ async function fetchEvents() {
     allEventsCache = events;
     applyFilters();
   } catch (err) {
-    showError(`Error connecting to server: ${err.message}. Make sure backend is running on port 8000.`);
+    showError(`Error connecting to server: ${err.message}. Make sure backend is running.`);
   }
 }
 
@@ -171,7 +170,7 @@ function applyFilters() {
 }
 
 /**
- * Render cards into #events-grid with Neon Cyber Accents & Dancing Characters
+ * Render cards into #events-grid with Sketch & Doodle styling
  */
 function renderEvents(events) {
   eventsGrid.innerHTML = '';
@@ -182,70 +181,70 @@ function renderEvents(events) {
     return;
   }
 
-  // 4 Animated Cartoon Buddies mapped to cards
-  const cartoonBuddies = [
-    { name: "Ord (Dragon Tales)", icon: "🐉", quote: "Dragon scale power!", anim: "dance-dragon", tagBg: "border-neonGreen/40 text-neonGreen bg-neonGreen/10" },
-    { name: "Popeye the Sailor", icon: "💪", quote: "Spinach power boost!", anim: "dance-popeye", tagBg: "border-neonCyan/40 text-neonCyan bg-neonCyan/10" },
-    { name: "Oswald the Octopus", icon: "🐙", quote: "Have a peaceful, groovy day!", anim: "dance-oswald", tagBg: "border-neonPurple/40 text-neonPurple bg-neonPurple/10" },
-    { name: "Mr. Bean & Teddy", icon: "🧸", quote: "Brilliant!", anim: "dance-bean", tagBg: "border-neonPink/40 text-neonPink bg-neonPink/10" },
+  // 4 Roaming Doodle Buddies
+  const doodleMascots = [
+    { icon: "🐲", quote: "Dragon Power", anim: "roam-dragon", badgeColor: "bg-emerald-100 text-emerald-900 border-emerald-400" },
+    { icon: "💪", quote: "Spinach Strength", anim: "roam-popeye", badgeColor: "bg-sky-100 text-sky-900 border-sky-400" },
+    { icon: "🐙", quote: "Calm Rhythm", anim: "roam-oswald", badgeColor: "bg-indigo-100 text-indigo-900 border-indigo-400" },
+    { icon: "🧸", quote: "Teddy Approved", anim: "roam-bean", badgeColor: "bg-amber-100 text-amber-900 border-amber-400" }
   ];
 
   events.forEach((event) => {
     const isFull = event.available_seats <= 0;
     const feeText = event.fee === 0 ? 'Free Entry' : `₹${event.fee}`;
     const seatsBadgeClass = isFull 
-      ? 'bg-rose-950/80 text-rose-300 font-bold border border-rose-500/50' 
-      : 'bg-neonGreen/10 text-neonGreen border border-neonGreen/40 font-bold font-mono';
+      ? 'bg-rose-100 text-rose-800 font-bold border-2 border-rose-800' 
+      : 'bg-emerald-100 text-emerald-900 border-2 border-slate-800 font-bold';
 
-    const buddy = cartoonBuddies[(event.id - 1) % cartoonBuddies.length];
+    const buddy = doodleMascots[(event.id - 1) % doodleMascots.length];
 
     const card = document.createElement('div');
-    card.className = `neon-glass rounded-2xl p-5 hover:-translate-y-1 transition duration-300 flex flex-col justify-between group`;
+    card.className = `doodle-card p-5 flex flex-col justify-between group`;
 
     card.innerHTML = `
       <div>
-        <!-- Node Header & Animated Character Avatar -->
+        <!-- Node Header & Hand-Drawn Mascot -->
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="flex items-center gap-3">
-            <span class="text-3xl p-2.5 bg-black/60 rounded-xl border border-neonCyan/30 group-hover:scale-110 transition ${buddy.anim}" title="${buddy.name}">
+            <span class="text-3xl p-2 bg-amber-50 rounded-xl border-2 border-slate-800 group-hover:scale-110 transition ${buddy.anim}">
               ${event.icon || '⚡'}
             </span>
             <div>
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-neonCyan bg-neonCyan/10 px-2 py-0.5 rounded-full border border-neonCyan/30 font-mono">
+                <span class="text-xs uppercase font-black px-2 py-0.5 rounded bg-slate-100 border border-slate-800 font-sketch">
                   ${event.category}
                 </span>
-                <span class="text-[10px] px-2 py-0.5 rounded-md border inline-flex items-center gap-1 font-mono ${buddy.tagBg}">
-                  <span class="${buddy.anim}">${buddy.icon}</span> ${buddy.name.split(' ')[0]}
+                <span class="text-xs px-2 py-0.5 rounded-full border inline-flex items-center gap-1 font-bold ${buddy.badgeColor}">
+                  <span class="${buddy.anim}">${buddy.icon}</span> ${buddy.quote}
                 </span>
               </div>
-              <h3 class="font-extrabold text-white text-base leading-snug line-clamp-1 mt-1 group-hover:text-neonGreen transition" title="${event.title}">
+              <h3 class="font-black text-slate-900 text-xl leading-snug line-clamp-1 mt-1 font-sketch" title="${event.title}">
                 ${event.title}
               </h3>
             </div>
           </div>
           ${isFull 
-            ? `<span class="px-2.5 py-0.5 rounded-md text-[11px] uppercase tracking-wide bg-rose-600 text-white font-extrabold shadow-sm shadow-rose-900 border border-rose-500">FULL</span>`
-            : `<span class="px-2.5 py-0.5 rounded-md text-xs font-bold font-mono ${event.fee === 0 ? 'bg-neonGreen/10 text-neonGreen border border-neonGreen/40' : 'bg-amber-950/70 text-amber-300 border border-amber-500/40'}">${feeText}</span>`
+            ? `<span class="px-2.5 py-0.5 rounded text-xs uppercase bg-rose-500 text-white font-black border-2 border-slate-800 rotate-3">FULL</span>`
+            : `<span class="px-2.5 py-0.5 rounded text-sm font-bold bg-amber-100 border-2 border-slate-800 -rotate-2">${feeText}</span>`
           }
         </div>
 
-        <p class="text-xs text-slate-300 line-clamp-2 mb-4 leading-relaxed">
-          ${event.description || 'Join this exciting fest competition! Click node to inspect details.'}
+        <p class="text-base text-slate-600 line-clamp-2 mb-4 leading-relaxed font-doodle">
+          ${event.description || 'Come join us for this exciting competition!'}
         </p>
 
-        <div class="space-y-1.5 text-xs text-slate-300 mb-5 bg-black/40 p-3 rounded-xl border border-white/10 font-mono">
+        <div class="space-y-1.5 text-base text-slate-800 mb-5 bg-yellow-50/70 p-3 rounded-xl border-2 border-slate-800 font-doodle">
           <div class="flex items-center justify-between">
-            <span class="text-slate-400">📅 Date & Time:</span>
-            <span class="font-bold text-white">${event.event_date} · ${event.event_time}</span>
+            <span class="text-slate-500">📅 When:</span>
+            <span class="font-bold">${event.event_date} · ${event.event_time}</span>
           </div>
           <div class="flex items-center justify-between">
-            <span class="text-slate-400">📍 Spatial Venue:</span>
-            <span class="font-bold text-neonCyan truncate max-w-[170px] cursor-pointer hover:underline" onclick="window.filterByVenue('${event.venue}')">${event.venue}</span>
+            <span class="text-slate-500">📍 Where:</span>
+            <span class="font-bold text-indigo-700 underline cursor-pointer" onclick="window.filterByVenue('${event.venue}')">${event.venue}</span>
           </div>
-          <div class="flex items-center justify-between pt-1 border-t border-white/10">
-            <span class="text-slate-400">🎟️ Seats Available:</span>
-            <span class="px-2 py-0.5 rounded text-[11px] ${seatsBadgeClass}">
+          <div class="flex items-center justify-between pt-1 border-t border-slate-300">
+            <span class="text-slate-500">🎟️ Seats Left:</span>
+            <span class="px-2 py-0.5 rounded text-xs ${seatsBadgeClass}">
               ${isFull ? '0 Seats Left' : `${event.available_seats} / ${event.capacity}`}
             </span>
           </div>
@@ -254,14 +253,14 @@ function renderEvents(events) {
 
       <button 
         onclick="openEventDetails(${event.id})"
-        class="w-full py-2.5 px-4 rounded-xl text-xs font-black transition flex items-center justify-center gap-2 ${
+        class="w-full py-2 px-4 rounded-xl text-lg font-sketch font-bold transition flex items-center justify-center gap-2 doodle-btn ${
           isFull
-            ? 'bg-white/10 hover:bg-white/15 text-slate-400 border border-white/10'
-            : 'bg-gradient-to-r from-neonGreen via-neonCyan to-neonPurple hover:from-neonGreen hover:to-neonPurple text-black shadow-lg shadow-neonCyan/20 hover:scale-[1.02]'
+            ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
+            : 'bg-amber-300 hover:bg-amber-400 text-slate-900'
         }"
       >
-        <span>Open Node & Register</span>
-        <span class="dance-dragon">→</span>
+        <span>Inspect & Register</span>
+        <span class="roam-dragon">✏️</span>
       </button>
     `;
 
@@ -299,15 +298,15 @@ window.openEventDetails = async function(eventId) {
     modalEventFee.textContent = event.fee === 0 ? 'Free' : `₹${event.fee}`;
     
     if (event.available_seats <= 0) {
-      modalEventSeats.innerHTML = `<span class="text-rose-400 font-bold">FULL (0 / ${event.capacity})</span>`;
+      modalEventSeats.innerHTML = `<span class="text-rose-600 font-bold">FULL (0 / ${event.capacity})</span>`;
       submitRegisterBtn.disabled = true;
       submitRegisterBtn.classList.add('opacity-50', 'cursor-not-allowed');
       submitRegisterBtn.innerHTML = '<span>Event Node is Full</span>';
     } else {
-      modalEventSeats.innerHTML = `<span class="text-neonGreen font-bold font-mono">${event.available_seats} of ${event.capacity} left</span>`;
+      modalEventSeats.innerHTML = `<span class="text-purple-700 font-bold">${event.available_seats} of ${event.capacity} left</span>`;
       submitRegisterBtn.disabled = false;
       submitRegisterBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-      submitRegisterBtn.innerHTML = '<span>Confirm Registration & Collect Stamp 🎉</span>';
+      submitRegisterBtn.innerHTML = '<span>Confirm Registration 📌</span>';
     }
 
     modalEventDesc.textContent = event.description || 'No additional details provided.';
@@ -335,7 +334,7 @@ async function handleRegistration(e) {
   const email = document.getElementById('reg-email').value.trim();
   const phone = document.getElementById('reg-phone').value.trim();
 
-  // Client-side validations
+  // Client validations
   let hasError = false;
   if (!studentName) {
     document.getElementById('err-student-name').classList.remove('hidden');
@@ -395,7 +394,7 @@ async function handleRegistration(e) {
     showModalAlert(`⚠️ Network error: ${err.message}`, 'error');
   } finally {
     submitRegisterBtn.disabled = false;
-    submitRegisterBtn.innerHTML = '<span>Confirm Registration & Collect Stamp 🎉</span>';
+    submitRegisterBtn.innerHTML = '<span>Confirm Registration 📌</span>';
   }
 }
 
@@ -413,14 +412,14 @@ async function loadUserPassport() {
       ? registrations.filter(r => r.email.toLowerCase() === email.toLowerCase())
       : registrations.slice(0, 3);
 
-    passportBadgeCount.textContent = `${myRegistrations.length} Badges Earned`;
+    passportBadgeCount.textContent = `${myRegistrations.length} Stamps Earned`;
 
     if (myRegistrations.length === 0) {
       passportContainer.innerHTML = `
-        <div class="p-6 rounded-2xl bg-black/40 border border-white/10 text-center text-slate-400 col-span-full py-10">
-          <span class="text-4xl block mb-2 dance-oswald">🐙</span>
-          <p class="text-sm font-bold text-slate-300">Your Fest Passport is ready for stamps!</p>
-          <p class="text-xs text-slate-500 mt-1">Register for any event above to collect verified digital stamps.</p>
+        <div class="p-8 rounded-2xl bg-white border-2 border-dashed border-slate-400 text-center text-slate-500 col-span-full font-doodle">
+          <span class="text-4xl block mb-2 roam-oswald">🐙</span>
+          <p class="text-xl font-bold text-slate-800">Your passport page is empty right now!</p>
+          <p class="text-base text-slate-600">Register for events above to collect official fest rubber-stamp passes.</p>
         </div>
       `;
       return;
@@ -429,23 +428,23 @@ async function loadUserPassport() {
     passportContainer.innerHTML = '';
     myRegistrations.forEach((reg) => {
       const stampCard = document.createElement('div');
-      stampCard.className = 'neon-glass p-4 rounded-2xl border border-neonPurple/40 flex items-center justify-between gap-3 group relative overflow-hidden';
+      stampCard.className = 'doodle-card p-4 bg-white flex items-center justify-between gap-3';
       stampCard.innerHTML = `
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-neonGreen/20 via-neonCyan/20 to-neonPurple/20 border border-neonCyan/30 flex items-center justify-center text-2xl dance-dragon">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 border-2 border-slate-800 flex items-center justify-center text-2xl roam-dragon">
             🎖️
           </div>
           <div>
-            <span class="text-[10px] font-mono uppercase text-neonCyan font-bold">Verified Registration</span>
-            <h4 class="font-extrabold text-white text-sm line-clamp-1">${reg.event_title}</h4>
-            <p class="text-[11px] text-slate-400 font-mono">${reg.student_name} (${reg.roll_number})</p>
+            <span class="text-xs uppercase font-bold text-indigo-700 font-sketch">Verified Stamp</span>
+            <h4 class="font-black text-slate-900 text-base line-clamp-1 font-sketch">${reg.event_title}</h4>
+            <p class="text-sm text-slate-600 font-doodle">${reg.student_name} (${reg.roll_number})</p>
           </div>
         </div>
-        <div class="text-right font-mono">
-          <span class="px-2 py-0.5 rounded text-[10px] bg-neonGreen/10 text-neonGreen border border-neonGreen/30 font-bold">
-            PASS #${reg.id}
+        <div class="text-right">
+          <span class="px-2 py-0.5 rounded text-xs bg-emerald-100 text-emerald-900 border border-slate-800 font-bold -rotate-3 inline-block">
+            STAMP #${reg.id}
           </span>
-          <span class="block text-[10px] text-slate-400 mt-1">Confirmed</span>
+          <span class="block text-xs text-slate-400 mt-1">Confirmed</span>
         </div>
       `;
       passportContainer.appendChild(stampCard);
@@ -459,12 +458,12 @@ async function loadUserPassport() {
 // Helpers for inline alerts and UI states
 function showModalAlert(message, type) {
   modalAlert.textContent = message;
-  modalAlert.classList.remove('hidden', 'bg-neonGreen/10', 'text-neonGreen', 'border-neonGreen/40', 'bg-rose-950/80', 'text-rose-300', 'border-rose-500/40');
+  modalAlert.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-900', 'border-emerald-600', 'bg-rose-100', 'text-rose-900', 'border-rose-600');
 
   if (type === 'success') {
-    modalAlert.classList.add('bg-neonGreen/10', 'text-neonGreen', 'border', 'border-neonGreen/40');
+    modalAlert.classList.add('bg-emerald-100', 'text-emerald-900', 'border-2', 'border-emerald-600');
   } else {
-    modalAlert.classList.add('bg-rose-950/80', 'text-rose-300', 'border', 'border-rose-500/40');
+    modalAlert.classList.add('bg-rose-100', 'text-rose-900', 'border-2', 'border-rose-600');
   }
 }
 
@@ -480,35 +479,34 @@ function hideInlineErrors() {
 }
 
 function showLoading() {
-  statusContainer.className = 'flex items-center justify-center py-16 text-slate-400';
+  statusContainer.className = 'flex items-center justify-center py-12 text-slate-600 font-doodle';
   statusContainer.innerHTML = `
-    <div class="flex flex-col items-center gap-3">
-      <div class="text-5xl dance-dragon">🐉</div>
-      <div class="w-8 h-8 border-4 border-neonCyan border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-sm font-mono text-neonCyan">Connecting to knowledge canvas...</p>
+    <div class="flex flex-col items-center gap-2">
+      <div class="text-4xl roam-dragon">✏️</div>
+      <p class="text-xl font-bold">Sketching out event doodles...</p>
     </div>
   `;
   statusContainer.classList.remove('hidden');
 }
 
 function showError(msg) {
-  statusContainer.className = 'p-6 bg-rose-950/50 border border-rose-500/30 rounded-2xl text-center text-rose-300';
+  statusContainer.className = 'p-5 bg-rose-50 border-2 border-rose-800 rounded-2xl text-center text-rose-800 font-doodle';
   statusContainer.innerHTML = `
-    <div class="text-4xl mb-2 dance-bean">🧸</div>
-    <h4 class="font-bold text-sm mb-1">Canvas Connection Failed</h4>
-    <p class="text-xs text-rose-400">${msg}</p>
-    <button onclick="fetchEvents()" class="mt-3 px-4 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-semibold hover:bg-rose-700">Try Again</button>
+    <div class="text-3xl mb-1 roam-bean">🧸</div>
+    <h4 class="font-bold text-lg mb-1">Sketchbook Connection Failed</h4>
+    <p class="text-sm">${msg}</p>
+    <button onclick="fetchEvents()" class="mt-2 px-4 py-1 bg-amber-300 text-slate-900 rounded-lg text-sm font-bold doodle-btn">Try Again</button>
   `;
   statusContainer.classList.remove('hidden');
   eventsGrid.innerHTML = '';
 }
 
 function showEmpty() {
-  statusContainer.className = 'py-16 text-center text-slate-400 neon-glass rounded-2xl';
+  statusContainer.className = 'py-12 text-center text-slate-500 doodle-card';
   statusContainer.innerHTML = `
-    <div class="text-5xl mb-2 dance-oswald">🐙</div>
-    <h4 class="font-bold text-white text-base mb-1">No event nodes match your filter</h4>
-    <p class="text-xs text-slate-400">Try adjusting your search query, or clear the venue filter pin.</p>
+    <div class="text-4xl mb-1 roam-oswald">🐙</div>
+    <h4 class="font-bold text-slate-800 text-xl font-sketch">No doodles match your search</h4>
+    <p class="text-base text-slate-600 font-doodle">Try another keyword or tap the map to reset the pin!</p>
   `;
   statusContainer.classList.remove('hidden');
 }
