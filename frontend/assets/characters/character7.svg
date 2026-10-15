@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="100%" height="100%" fill="none" stroke="#2B2A28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Acrobatic Cartoon Character (Cartwheeling & Somersaulting) -->
+  
+  <!-- Swirling Curly Monkey Tail -->
+  <path d="M52,105 C30,115 15,90 25,75 C32,65 48,72 42,88" stroke-width="3.5" fill="none"/>
+  
+  <!-- Athletic Headband Ribbons -->
+  <path d="M48,38 Q36,32 28,36 M46,42 Q34,44 26,48" stroke="#E5533D" stroke-width="3"/>
+
+  <!-- Left Leg (Outstretched in Cartwheel star pose) -->
+  <path d="M58,110 L38,135 Q30,140 28,148 Q35,152 44,144 L66,118" fill="#F08A3C"/>
+  <ellipse cx="34" cy="145" rx="9" ry="5" fill="#E5533D" stroke="#2B2A28" stroke-width="2.5" transform="rotate(-20 34 145)"/>
+
+  <!-- Right Leg (Outstretched in Cartwheel star pose) -->
+  <path d="M102,110 L122,135 Q130,140 132,148 Q125,152 116,144 L94,118" fill="#F08A3C"/>
+  <ellipse cx="126" cy="145" rx="9" ry="5" fill="#E5533D" stroke="#2B2A28" stroke-width="2.5" transform="rotate(20 126 145)"/>
+
+  <!-- Body / Torso -->
+  <ellipse cx="80" cy="98" rx="26" ry="24" fill="#F08A3C"/>
+  <!-- Belly Patch -->
+  <ellipse cx="80" cy="100" rx="16" ry="15" fill="#F2B84B" stroke="#2B2A28" stroke-width="2"/>
+
+  <!-- Left Arm (Reaching out for hand-plant) -->
+  <path d="M58,84 L32,60 Q24,54 22,46 Q30,42 38,50 L64,74" fill="#F08A3C"/>
+  <!-- Wristband -->
+  <rect x="28" y="50" width="10" height="7" rx="2" fill="#E5533D" stroke="#2B2A28" stroke-width="2" transform="rotate(-35 33 53)"/>
+  <!-- Open Hand -->
+  <circle cx="23" cy="46" r="6" fill="#F2B84B"/>
+
+  <!-- Right Arm (Reaching out for hand-plant) -->
+  <path d="M102,84 L128,60 Q136,54 138,46 Q130,42 122,50 L96,74" fill="#F08A3C"/>
+  <!-- Wristband -->
+  <rect x="122" y="50" width="10" height="7" rx="2" fill="#E5533D" stroke="#2B2A28" stroke-width="2" transform="rotate(35 127 53)"/>
+  <!-- Open Hand -->
+  <circle cx="137" cy="46" r="6" fill="#F2B84B"/>
+
+  <!-- Round Head -->
+  <circle cx="80" cy="56" r="28" fill="#F08A3C"/>
+
+  <!-- Big Round Monkey Ears -->
+  <circle cx="50" cy="54" r="13" fill="#F08A3C"/>
+  <circle cx="50" cy="54" r="7" fill="#F28B82" stroke="#2B2A28" stroke-width="2"/>
+  <circle cx="110" cy="54" r="13" fill="#F08A3C"/>
+  <circle cx="110" cy="54" r="7" fill="#F28B82" stroke="#2B2A28" stroke-width="2"/>
+
+  <!-- Athletic Headband across forehead -->
+  <path d="M54,42 Q80,36 106,42 L106,49 Q80,43 54,49 Z" fill="#E5533D" stroke="#2B2A28" stroke-width="2.5"/>
+
+  <!-- Heart-shaped Face Patch -->
+  <path d="M62,56 C62,46 72,44 80,51 C88,44 98,46 98,56 C98,69 80,78 80,78 C80,78 62,69 62,56 Z" fill="#F2B84B" stroke="#2B2A28" stroke-width="2"/>
+
+  <!-- Wide Cartoon Eyes -->
+  <ellipse cx="73" cy="56" rx="4.5" ry="6" fill="#FBF6EA" stroke="#2B2A28" stroke-width="2"/>
+  <circle cx="74" cy="56" r="2.5" fill="#2B2A28"/>
+  <ellipse cx="87" cy="56" rx="4.5" ry="6" fill="#FBF6EA" stroke="#2B2A28" stroke-width="2"/>
+  <circle cx="88" cy="56" r="2.5" fill="#2B2A28"/>
+
+  <!-- Cute Snout & Grinning Open Mouth -->
+  <ellipse cx="80" cy="65" rx="3.5" ry="2.5" fill="#E5533D"/>
+  <path d="M72,68 Q80,76 88,68" stroke-width="2.5" fill="#2B2A28"/>
+  <!-- Rosy Cheeks -->
+  <circle cx="66" cy="64" r="3.5" fill="#F28B82" stroke="none"/>
+  <circle cx="94" cy="64" r="3.5" fill="#F28B82" stroke="none"/>
+</svg>

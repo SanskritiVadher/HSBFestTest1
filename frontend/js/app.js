@@ -212,6 +212,39 @@ function setupEasterEggs() {
       }
     });
   }
+
+  // Acrobatic character easter egg
+  const acrobatChar = document.getElementById('acrobat-character');
+  const acrobatSpeech = document.getElementById('acrobat-speech');
+  if (acrobatChar && acrobatSpeech) {
+    const acrobatCheers = [
+      "Ta-da! 🤸",
+      "Watch this flip! ✨",
+      "Cartwheel champion! 🎪",
+      "10/10 landing! 🏅",
+      "Full acrobatic energy! ⚡"
+    ];
+    let acrobatTimeout = null;
+    const triggerAcrobat = () => {
+      acrobatSpeech.textContent = acrobatCheers[Math.floor(Math.random() * acrobatCheers.length)];
+      acrobatSpeech.classList.remove('hidden', 'speech-pop');
+      void acrobatSpeech.offsetWidth;
+      acrobatSpeech.classList.add('speech-pop');
+
+      clearTimeout(acrobatTimeout);
+      acrobatTimeout = setTimeout(() => {
+        acrobatSpeech.classList.add('hidden');
+      }, 2000);
+    };
+
+    acrobatChar.addEventListener('click', triggerAcrobat);
+    acrobatChar.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        triggerAcrobat();
+      }
+    });
+  }
 }
 
 /**
