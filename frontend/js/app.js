@@ -113,6 +113,31 @@ async function fetchEvents() {
 }
 
 /**
+ * Date formatting helper: '2026-11-14' + '10:00 AM' -> 'Sat, 14 Nov · 10:00 AM'
+ */
+function formatEventDate(dateStr, timeStr) {
+  if (!dateStr) return timeStr || '';
+  try {
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      const d = new Date(year, month, day);
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const dayName = days[d.getDay()];
+      const monthName = months[d.getMonth()];
+      const formattedDate = `${dayName}, ${day} ${monthName}`;
+      return timeStr ? `${formattedDate} · ${timeStr}` : formattedDate;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return timeStr ? `${dateStr} · ${timeStr}` : dateStr;
+}
+
+/**
  * Render cards into #events-grid
  */
 function renderEvents(events) {
@@ -124,18 +149,43 @@ function renderEvents(events) {
     return;
   }
 
-  events.forEach((event) => {
+  const tilts = ['card-tilt-left', 'card-tilt-flat', 'card-tilt-right'];
+
+  events.forEach((event, index) => {
     const isFull = event.available_seats <= 0;
     const feeText = event.fee === 0 ? 'Free' : `₹${event.fee}`;
     const categoryBg = CATEGORY_COLORS[event.category] || '#D9A58F';
+    const tiltClass = tilts[index % 3];
+    const isTape = index % 2 === 0;
+
+    // Progress bar math & color thresholds:
+    // sage under 70%, mustard 70-90%, tomato over 90%
+    const capacity = event.capacity || 100;
+    const available = Math.max(0, event.available_seats);
+    const booked = Math.max(0, capacity - available);
+    const pct = capacity > 0 ? Math.min(100, Math.round((booked / capacity) * 100)) : 100;
+    
+    let barColor = '#8DB580'; // sage (<70%)
+    if (pct >= 90 || isFull) {
+      barColor = '#E5533D'; // tomato (>90% or full)
+    } else if (pct >= 70) {
+      barColor = '#F2B84B'; // mustard (70-90%)
+    }
+
+    const formattedDate = formatEventDate(event.event_date, event.event_time);
 
     const card = document.createElement('div');
-    card.className = `sketch-card p-5 flex flex-col justify-between ${isFull ? 'opacity-75 bg-[#fbf8f2]' : 'bg-white'}`;
+    card.className = `sketch-card p-5 flex flex-col justify-between ${tiltClass} ${isFull ? 'opacity-85 bg-[#fbf8f2]' : 'bg-white'}`;
 
     card.innerHTML = `
+      ${isTape ? '<div class="card-tape"></div>' : '<div class="card-clip"></div>'}
+      
+      <!-- Category top band tint -->
+      <div class="h-2.5 -mx-5 -mt-5 mb-3.5 rounded-t-[12px] border-b-2 border-ink" style="background-color: ${categoryBg};"></div>
+
       <div>
         <!-- Card Top Bar: Icon, Title & Category Badge -->
-        <div class="flex items-start justify-between gap-2.5 mb-3">
+        <div class="flex items-start justify-between gap-2.5 mb-2.5">
           <div class="flex items-center gap-2.5">
             <span class="text-3xl p-1.5 rounded-lg border-2 border-ink bg-paper flex-shrink-0" aria-hidden="true">
               ${event.icon || '⚡'}
@@ -159,25 +209,38 @@ function renderEvents(events) {
         </div>
 
         <!-- Description -->
-        <p class="text-base text-ink/80 line-clamp-2 mb-4 leading-relaxed font-hand">
-          ${event.description || 'Join this exciting college fest event! Click details to read more.'}
+        <p class="text-base text-ink/80 line-clamp-2 mb-3.5 leading-relaxed font-hand">
+          ${event.description || 'Join this exciting college fest event! Register today.'}
         </p>
 
-        <!-- Meta Details Box (Quick scan numbers in clear font) -->
-        <div class="space-y-1.5 text-sm bg-paper p-3 rounded-xl border border-ink/40 mb-4 font-sans text-ink">
-          <div class="flex items-center justify-between">
-            <span class="text-ink/65 text-xs font-bold">DATE & TIME:</span>
-            <span class="font-semibold">${event.event_date} · ${event.event_time}</span>
+        <!-- Icon Chips (No grey box, one line each for calendar, pin, seats) -->
+        <div class="space-y-1.5 mb-4 font-sans text-xs sm:text-sm text-ink">
+          <!-- Date Chip -->
+          <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-ink/40 bg-paper">
+            <span class="text-base flex-shrink-0" aria-hidden="true">📅</span>
+            <span class="font-semibold truncate">${formattedDate}</span>
           </div>
-          <div class="flex items-center justify-between">
-            <span class="text-ink/65 text-xs font-bold">VENUE:</span>
-            <span class="font-semibold truncate max-w-[170px]">${event.venue}</span>
+
+          <!-- Venue Chip -->
+          <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-ink/40 bg-paper">
+            <span class="text-base flex-shrink-0" aria-hidden="true">📍</span>
+            <span class="font-semibold truncate">${event.venue}</span>
           </div>
-          <div class="flex items-center justify-between pt-1 border-t border-ink/20">
-            <span class="text-ink/65 text-xs font-bold">AVAILABLE SEATS:</span>
-            <span class="font-bold ${isFull ? 'text-tomato' : 'text-ink'}">
-              ${isFull ? '0 seats left' : `${event.available_seats} / ${event.capacity} seats left`}
-            </span>
+
+          <!-- Seat Progress Bar Chip -->
+          <div class="p-2 rounded-lg border border-ink/40 bg-paper">
+            <div class="flex items-center justify-between text-xs font-bold mb-1">
+              <span class="flex items-center gap-1.5">
+                <span class="text-sm" aria-hidden="true">🎟️</span>
+                <span class="text-ink/75 uppercase tracking-wide">Seats</span>
+              </span>
+              <span class="${isFull ? 'text-tomato font-bold' : 'text-ink font-semibold'}">
+                ${isFull ? '0 left' : `${event.available_seats} left`}
+              </span>
+            </div>
+            <div class="w-full h-2.5 bg-white border border-ink rounded-full overflow-hidden p-[1px]">
+              <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${barColor};"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -191,8 +254,7 @@ function renderEvents(events) {
             : 'bg-tomato text-white hover:bg-[#d4432d]'
         }"
       >
-        <span>${isFull ? 'Event Full — View Info' : 'View Details & Register'}</span>
-        <span class="text-sm">→</span>
+        <span>${isFull ? 'View Details ✏️' : 'Register ✏️'}</span>
       </button>
     `;
 
@@ -218,7 +280,7 @@ window.openEventDetails = async function(eventId) {
     modalEventCategory.textContent = event.category;
     modalEventCategory.style.backgroundColor = CATEGORY_COLORS[event.category] || '#D9A58F';
     modalEventTitle.textContent = event.title;
-    modalEventDateTime.textContent = `${event.event_date} · ${event.event_time}`;
+    modalEventDateTime.textContent = formatEventDate(event.event_date, event.event_time);
     modalEventVenue.textContent = event.venue;
     modalEventFee.textContent = event.fee === 0 ? 'Free' : `₹${event.fee}`;
     
@@ -344,40 +406,37 @@ function hideInlineErrors() {
 }
 
 /**
- * Loading state: 6 skeleton cards in sketch style
+ * Loading state with decorative character & sketch loading indicator
  */
 function showLoading() {
-  statusContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
-  statusContainer.innerHTML = Array(6).fill(0).map(() => `
-    <div class="sketch-card p-5 bg-white animate-pulse">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-10 h-10 rounded-lg bg-ink/10 border-2 border-ink"></div>
-        <div class="flex-1 space-y-1.5">
-          <div class="w-20 h-4 bg-ink/10 rounded"></div>
-          <div class="w-36 h-5 bg-ink/15 rounded"></div>
-        </div>
-      </div>
-      <div class="w-full h-10 bg-ink/5 rounded mb-4"></div>
-      <div class="w-full h-18 bg-paper rounded border border-ink/20 mb-4"></div>
-      <div class="w-full h-9 bg-ink/15 rounded-xl border-2 border-ink"></div>
+  statusContainer.className = 'sketch-card p-8 text-center bg-white my-6 max-w-md mx-auto relative';
+  statusContainer.innerHTML = `
+    <div class="flex flex-col items-center justify-center">
+      <img src="/assets/characters/character5.svg" alt="" class="w-24 h-24 object-contain mb-3 anim-hero-bob pointer-events-none" aria-hidden="true" />
+      <h3 class="font-brush text-2xl font-bold text-ink mb-1">Sketching festival events...</h3>
+      <p class="text-base text-ink/70 font-hand">Connecting to the live schedule</p>
     </div>
-  `).join('');
+  `;
   statusContainer.classList.remove('hidden');
   eventsGrid.innerHTML = '';
 }
 
 /**
- * Empty state: Friendly doodle + Clear filters button
+ * Empty state: Friendly character beside "No events match" + Clear button
  */
 function showEmpty() {
-  statusContainer.className = 'p-8 sketch-card text-center bg-white my-6';
+  statusContainer.className = 'sketch-card p-6 sm:p-8 bg-white my-6 max-w-xl mx-auto';
   statusContainer.innerHTML = `
-    <div class="text-4xl mb-2">🔍</div>
-    <h3 class="font-brush text-2xl font-bold text-ink mb-1">No events match your search</h3>
-    <p class="text-base text-ink/75 mb-4">Try checking your spelling or selecting another category filter.</p>
-    <button onclick="window.clearFilters()" class="sketch-btn px-4 py-1.5 bg-mustard hover:bg-[#e0a435] text-ink font-bold text-base">
-      Clear Filters & Search
-    </button>
+    <div class="flex flex-col sm:flex-row items-center gap-6 justify-center">
+      <img src="/assets/characters/character6.svg" alt="" class="w-28 h-28 sm:w-32 sm:h-32 object-contain flex-shrink-0 pointer-events-none" aria-hidden="true" />
+      <div class="text-center sm:text-left">
+        <h3 class="font-brush text-2xl sm:text-3xl font-bold text-ink mb-1">No events match your search</h3>
+        <p class="text-base text-ink/75 mb-4 font-hand">Try checking your spelling or selecting another category filter.</p>
+        <button onclick="window.clearFilters()" class="sketch-btn px-4 py-1.5 bg-mustard hover:bg-[#e0a435] text-ink font-bold text-base">
+          Clear Filters & Search
+        </button>
+      </div>
+    </div>
   `;
   statusContainer.classList.remove('hidden');
   eventsGrid.innerHTML = '';

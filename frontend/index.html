@@ -50,10 +50,9 @@
       --clay: #D9A58F;
     }
 
-    /* Page Background with faint dotted-grid sketchbook texture */
     body {
       background-color: var(--paper);
-      background-image: radial-gradient(rgba(43, 42, 40, 0.12) 1.2px, transparent 1.2px);
+      background-image: radial-gradient(rgba(43, 42, 40, 0.13) 1.2px, transparent 1.2px);
       background-size: 20px 20px;
       color: var(--ink);
       font-family: 'Patrick Hand', cursive, sans-serif;
@@ -62,13 +61,14 @@
       overflow-x: hidden;
     }
 
-    /* Wobbly Sketch Card */
+    /* Wobbly Sketch Card with Hard Offset Shadow */
     .sketch-card {
       background-color: #FFFFFF;
       border: 2px solid var(--ink);
       border-radius: 14px 6px 16px 8px;
       box-shadow: 4px 4px 0 var(--ink);
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
     .sketch-card:hover {
       transform: translateY(-2px);
@@ -103,22 +103,34 @@
       box-shadow: 0 0 0 2px var(--mustard);
     }
 
-    /* Background Cartoon Floating Animations */
-    @keyframes gentleFloat1 {
+    /* Character Bobbing & Floating Animations */
+    @keyframes heroBob {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(2deg); }
+      50% { transform: translateY(-8px) rotate(1.5deg); }
     }
-    @keyframes gentleFloat2 {
+    @keyframes kiteSway {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
       50% { transform: translateY(-6px) rotate(-2deg); }
     }
+    @keyframes bearPeek {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes skateAcross {
+      0% { transform: translateX(-120px) rotate(1deg); }
+      50% { transform: translateX(calc(100vw + 60px)) rotate(-1deg); }
+      50.01% { transform: translateX(calc(100vw + 60px)) scaleX(-1); }
+      100% { transform: translateX(-120px) scaleX(-1); }
+    }
 
-    .bg-char-float1 { animation: gentleFloat1 7s ease-in-out infinite; }
-    .bg-char-float2 { animation: gentleFloat2 8s ease-in-out infinite; }
+    .anim-hero-bob { animation: heroBob 5s ease-in-out infinite; }
+    .anim-kite-sway { animation: kiteSway 6s ease-in-out infinite; }
+    .anim-bear-peek { animation: bearPeek 4s ease-in-out infinite; }
+    .anim-skater { animation: skateAcross 36s linear infinite; }
 
     @media (prefers-reduced-motion: reduce) {
-      .bg-char-float1, .bg-char-float2 {
-        animation: none;
+      .anim-hero-bob, .anim-kite-sway, .anim-bear-peek, .anim-skater {
+        animation: none !important;
       }
     }
 
@@ -131,18 +143,68 @@
     .marker-highlight::before {
       content: "";
       position: absolute;
-      left: -4px;
-      right: -4px;
+      left: -6px;
+      right: -6px;
       bottom: 2px;
       top: 25%;
       background-color: var(--mustard);
-      opacity: 0.85;
+      opacity: 0.9;
       z-index: -1;
       border-radius: 4px 10px 6px 12px;
-      transform: rotate(-1deg);
+      transform: rotate(-1.5deg);
     }
 
-    /* Custom Scrollbar in Earthy Ink */
+    /* Ticket-stub badge */
+    .ticket-stub {
+      background-color: #FFFFFF;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      box-shadow: 2.5px 2.5px 0 var(--ink);
+      transform: rotate(-3deg);
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 10px;
+    }
+
+    /* Tape strip on card */
+    .card-tape {
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 52px;
+      height: 16px;
+      background-color: rgba(242, 184, 75, 0.7);
+      border: 1px dashed var(--ink);
+      border-radius: 2px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Paperclip on card alternate */
+    .card-clip {
+      position: absolute;
+      top: -8px;
+      right: 20px;
+      width: 14px;
+      height: 24px;
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      z-index: 10;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    /* Alternating Card Tilts */
+    .card-tilt-left { transform: rotate(-1deg); }
+    .card-tilt-right { transform: rotate(1deg); }
+    .card-tilt-flat { transform: rotate(0deg); }
+
+    .card-tilt-left:hover, .card-tilt-right:hover, .card-tilt-flat:hover {
+      transform: translateY(-3px) rotate(0deg);
+    }
+
+    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--paper); }
     ::-webkit-scrollbar-thumb { background: #c2bbae; border-radius: 9999px; border: 2px solid var(--ink); }
@@ -152,24 +214,12 @@
 <body class="min-h-screen relative flex flex-col">
 
   <!-- ============================================== -->
-  <!-- BACKGROUND DECORATIVE CARTOON ART (0.2 OPACITY) -->
-  <!-- Non-intrusive, pointer-events: none, aria-hidden -->
+  <!-- FAINT BACKGROUND TEXTURE (10% OPACITY CHARACTERS) -->
   <!-- ============================================== -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-    <!-- Top-Left Corner: Cat & Mouse -->
-    <img src="/assets/characters/character1.svg" alt="" class="absolute -top-4 -left-6 w-36 sm:w-44 md:w-52 opacity-20 bg-char-float1" />
-    
-    <!-- Top-Right Corner: Kid with Kite -->
-    <img src="/assets/characters/character3.svg" alt="" class="absolute top-8 -right-4 w-32 sm:w-40 md:w-48 opacity-20 bg-char-float2" />
-    
-    <!-- Mid Left Gutter: Sleepy Bear hugging honey pot (hidden on mobile) -->
-    <img src="/assets/characters/character2.svg" alt="" class="hidden md:block absolute top-[45%] -left-8 w-36 sm:w-44 opacity-20 bg-char-float2" />
-    
-    <!-- Mid Right Gutter: Penguin on Skateboard (hidden on mobile) -->
-    <img src="/assets/characters/character4.svg" alt="" class="hidden md:block absolute top-[55%] -right-6 w-36 sm:w-40 opacity-20 bg-char-float1" />
-    
-    <!-- Bottom Left Gutter: Tiny Dragon blowing star (hidden on mobile) -->
-    <img src="/assets/characters/character5.svg" alt="" class="hidden md:block absolute bottom-6 left-6 w-32 sm:w-36 opacity-20 bg-char-float1" />
+    <img src="/assets/characters/character2.svg" alt="" class="absolute top-[35%] -left-12 w-56 opacity-10" />
+    <img src="/assets/characters/character5.svg" alt="" class="absolute top-[60%] -right-12 w-52 opacity-10" />
+    <img src="/assets/characters/character6.svg" alt="" class="absolute bottom-10 left-1/4 w-52 opacity-10" />
   </div>
 
   <!-- FOREGROUND INTERACTIVE CONTENT -->
@@ -184,33 +234,64 @@
             Zenith '26
           </span>
         </a>
-        <a href="/admin.html" class="sketch-btn px-3 py-1 bg-white hover:bg-mustard text-sm font-bold text-ink transition flex items-center gap-1.5">
+        <a href="/admin.html" class="sketch-btn px-3 py-1 bg-white hover:bg-mustard text-sm font-bold text-ink transition flex items-center gap-1.5 font-hand">
           <span>Admin Dashboard</span>
           <span class="text-xs">→</span>
         </a>
       </div>
     </header>
 
-    <!-- 2. COMPACT HERO SECTION (<180px on desktop) -->
-    <section class="max-w-4xl mx-auto px-4 sm:px-6 pt-5 pb-3 text-center">
-      <h1 class="font-brush text-4xl sm:text-5xl font-bold text-ink tracking-tight leading-tight">
-        Ignite Your Spark at <span class="marker-highlight">Zenith '26</span>
-      </h1>
-      <!-- Hand-Drawn Underline SVG -->
-      <div class="flex justify-center -mt-1 mb-1">
-        <svg class="w-48 sm:w-64 h-3.5 text-tomato" viewBox="0 0 240 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-          <path d="M 4 8 Q 60 2 120 7 T 236 4" />
-        </svg>
+    <!-- 2. EXPANDED HERO SECTION (~280-320px) WITH 2 LARGE FLANKING CHARACTERS -->
+    <section class="max-w-6xl mx-auto px-1 sm:px-6 pt-3 pb-2 relative flex flex-col items-center justify-center min-h-[190px] md:min-h-[290px]">
+      
+      <!-- HERO LEFT CHARACTER: Scheming Cat chasing mouse (100% Opacity, ~180px tall on desktop, ~60px on mobile) -->
+      <div class="absolute left-1 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 pointer-events-none anim-hero-bob select-none z-10 w-[58px] sm:w-[110px] md:w-[185px]" aria-hidden="true">
+        <img src="/assets/characters/character1.svg" alt="" class="w-full h-auto object-contain drop-shadow-sm" />
       </div>
-      <p class="text-base sm:text-lg text-ink font-semibold mt-0.5">
-        <span class="font-sans font-bold text-sm bg-white border border-ink px-2 py-0.5 rounded mr-1.5 shadow-sm">Nov 14–15, 2026</span>
-        48 Hours of Energy, Innovation & Rivalry across Campus Auditoriums.
-      </p>
+
+      <!-- HERO CENTER CONTENT -->
+      <div class="text-center px-14 sm:px-28 md:px-48 max-w-3xl z-20">
+        <!-- Ticket-stub badge -->
+        <div class="mb-1 inline-block">
+          <span class="ticket-stub font-sans text-xs sm:text-sm font-black text-ink uppercase tracking-wider">
+            🎟️ 14–15 NOV 2026
+          </span>
+        </div>
+
+        <h1 class="font-brush text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-ink tracking-tight leading-snug">
+          Ignite Your Spark at <br class="sm:hidden" /><span class="marker-highlight">Zenith '26</span>
+        </h1>
+        
+        <!-- Hand-Drawn Underline SVG -->
+        <div class="flex justify-center -mt-1 mb-1">
+          <svg class="w-32 sm:w-56 md:w-72 h-3 text-tomato" viewBox="0 0 240 12" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
+            <path d="M 4 8 Q 60 2 120 7 T 236 4" />
+          </svg>
+        </div>
+
+        <p class="text-xs sm:text-base md:text-lg text-ink font-semibold mt-0.5 leading-snug max-w-[210px] sm:max-w-xl mx-auto">
+          48 Hours of Energy, Innovation & Rivalry across Campus Auditoriums.
+        </p>
+
+        <!-- Dashed Chase Path in Hero -->
+        <div class="hidden sm:flex justify-center items-center gap-1.5 mt-2 opacity-60">
+          <svg class="w-64 h-4 text-tomato" viewBox="0 0 240 12" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4">
+            <path d="M 10 6 Q 70 12 130 6 T 230 8" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- HERO RIGHT CHARACTER: Cheerful Dragon blowing a star (100% Opacity, ~180px tall on desktop, ~60px on mobile) -->
+      <div class="absolute right-1 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 pointer-events-none anim-hero-bob select-none z-10 w-[58px] sm:w-[110px] md:w-[185px]" aria-hidden="true">
+        <img src="/assets/characters/character5.svg" alt="" class="w-full h-auto object-contain drop-shadow-sm" />
+      </div>
+
     </section>
 
-    <!-- 3. STICKY TOOLBAR (Search + Category Filter Chips) -->
-    <div class="sticky top-14 z-30 bg-[#FBF6EA]/95 backdrop-blur-sm border-y border-ink/40 py-2.5 shadow-sm">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between">
+    <!-- 3. STICKY TOOLBAR (Search + Category Filter Chips + Kid with Kite) -->
+    <div class="sticky top-14 z-30 bg-[#FBF6EA]/95 backdrop-blur-sm border-y border-ink/40 py-2.5 shadow-sm relative">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-2.5 items-stretch md:items-center justify-between relative">
+        
         <!-- Search Input -->
         <div class="relative flex-1 max-w-sm">
           <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-ink text-sm">
@@ -245,28 +326,48 @@
             Workshop
           </button>
         </div>
+
+        <!-- Kid with Kite sitting at top-right of toolbar (hidden on mobile <768px) -->
+        <div class="hidden md:block absolute -top-14 right-2 pointer-events-none anim-kite-sway z-40" aria-hidden="true">
+          <img src="/assets/characters/character3.svg" alt="" class="w-28 h-28 object-contain" />
+        </div>
+
       </div>
     </div>
 
     <!-- 4. EVENT GRID & STATUS MESSAGES -->
-    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full">
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full relative">
+      
+      <!-- Peeking Bear behind top edge of the first card row (hidden on mobile <768px) -->
+      <div class="hidden md:block absolute -top-12 left-10 pointer-events-none anim-bear-peek z-0" aria-hidden="true">
+        <img src="/assets/characters/character2.svg" alt="" class="w-28 h-28 object-contain" />
+      </div>
+
       <!-- Status Container (Loading Skeleton / Empty / Error) -->
-      <div id="status-container" class="hidden mb-6"></div>
+      <div id="status-container" class="hidden mb-6 relative z-10"></div>
 
       <!-- Events Grid: 1 col mobile, 2 col tablet, 3 col desktop -->
-      <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div id="events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
         <!-- Cards rendered dynamically by js/app.js -->
       </div>
     </main>
 
+    <!-- Skateboard Penguin skating across the bottom on a loop (hidden on mobile <768px) -->
+    <div class="hidden md:block w-full overflow-hidden pointer-events-none relative h-16 -mt-4 z-20" aria-hidden="true">
+      <div class="anim-skater absolute bottom-0 left-0">
+        <img src="/assets/characters/character4.svg" alt="" class="w-20 h-20 object-contain" />
+      </div>
+      <div class="w-full border-b border-dashed border-ink/40 absolute bottom-3"></div>
+    </div>
+
     <!-- FOOTER -->
-    <footer class="border-t border-ink/30 py-4 text-center text-sm text-ink/75 bg-paper">
+    <footer class="border-t border-ink/30 py-4 text-center text-sm text-ink/75 bg-paper relative z-30">
       <p>© 2026 Zenith College Fest Management System · Hand-Drawn Sketchbook Edition</p>
     </footer>
 
   </div>
 
-  <!-- REGISTRATION MODAL (Same validation discipline, Sketch Styling) -->
+  <!-- REGISTRATION MODAL -->
   <div id="event-modal" class="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="sketch-card bg-paper max-w-lg w-full overflow-hidden border-2 border-ink max-h-[92vh] flex flex-col">
       <!-- Modal Header -->

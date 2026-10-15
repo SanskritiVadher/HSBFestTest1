@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="100%" height="100%" fill="none" stroke="#2B2A28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cheerful Scarecrow with a Megaphone -->
+  <!-- Straw Hat -->
+  <polygon points="45,46 135,46 115,18 65,18" fill="#F2B84B"/>
+  <ellipse cx="90" cy="46" rx="55" ry="9" fill="#F2B84B"/>
+  <path d="M60,40 Q90,44 120,40" stroke="#E5533D" stroke-width="4"/>
+  <!-- Burlap Sack Head -->
+  <ellipse cx="90" cy="72" rx="28" ry="24" fill="#FBF6EA"/>
+  <!-- Button Eyes -->
+  <circle cx="78" cy="68" r="4" fill="#2B2A28"/>
+  <line x1="75" y1="68" x2="81" y2="68" stroke="#ffffff" stroke-width="1.5"/>
+  <circle cx="102" cy="68" r="4" fill="#2B2A28"/>
+  <line x1="99" y1="68" x2="105" y2="68" stroke="#ffffff" stroke-width="1.5"/>
+  <!-- Triangle Patch Nose -->
+  <polygon points="90,72 85,80 95,80" fill="#F08A3C"/>
+  <!-- Stitched Friendly Smile -->
+  <path d="M72,84 Q90,94 108,84" stroke-width="2.5"/>
+  <line x1="78" y1="83" x2="78" y2="89" stroke-width="2"/>
+  <line x1="90" y1="87" x2="90" y2="93" stroke-width="2"/>
+  <line x1="102" y1="83" x2="102" y2="89" stroke-width="2"/>
+  <!-- Plaid / Flannel Shirt & Wooden Post -->
+  <line x1="90" y1="96" x2="90" y2="165" stroke="#854d0e" stroke-width="6"/>
+  <path d="M65,96 L115,96 L124,136 L56,136 Z" fill="#E5533D"/>
+  <path d="M56,104 L32,118" stroke="#2B2A28" stroke-width="4"/>
+  <!-- Holding a big Megaphone -->
+  <polygon points="112,114 152,90 156,140 114,122" fill="#F08A3C"/>
+  <ellipse cx="154" cy="115" rx="6" ry="24" fill="#E5533D"/>
+  <ellipse cx="113" cy="118" rx="3.5" ry="5" fill="#2B2A28"/>
+  <rect x="110" y="122" width="6" height="12" rx="2" fill="#2B2A28"/>
+  <!-- Sound soundwaves -->
+  <path d="M164,104 Q172,115 164,126" stroke="#E5533D" stroke-width="2.5"/>
+  <path d="M170,96 Q180,115 170,134" stroke="#E5533D" stroke-width="2.5"/>
+  <!-- Straw sticking out sleeves -->
+  <line x1="30" y1="120" x2="22" y2="124" stroke="#F2B84B" stroke-width="2.5"/>
+  <line x1="32" y1="117" x2="24" y2="114" stroke="#F2B84B" stroke-width="2.5"/>
+</svg>

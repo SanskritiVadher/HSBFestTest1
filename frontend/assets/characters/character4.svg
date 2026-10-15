@@ -1,28 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="100%" height="100%" fill="none" stroke="#2B2A28" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-  <!-- Cheerful chubby penguin on a skateboard line-art doodle -->
-  <!-- Penguin Body Outer -->
-  <path d="M50,85 C50,45 60,35 80,35 C100,35 110,45 110,85 C110,115 102,126 80,126 C58,126 50,115 50,85 Z" fill="#2B2A28"/>
-  <!-- White Chubby Belly -->
-  <ellipse cx="80" cy="85" rx="19" ry="26" fill="#FBF6EA"/>
-  <!-- Happy Eyes -->
-  <path d="M70,52 Q74,48 78,52" stroke-width="2.5"/>
-  <path d="M82,52 Q86,48 90,52" stroke-width="2.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170" width="100%" height="100%" fill="none" stroke="#2B2A28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cheerful chubby Penguin on Skateboard -->
+  <!-- Penguin Outer Body -->
+  <path d="M52,90 C52,48 64,36 85,36 C106,36 118,48 118,90 C118,122 108,132 85,132 C62,132 52,122 52,90 Z" fill="#2B2A28"/>
+  <!-- Chubby White Belly -->
+  <ellipse cx="85" cy="92" rx="22" ry="28" fill="#FBF6EA"/>
+  <!-- Happy Expressive Eyes -->
+  <path d="M74,56 Q78,51 82,56" stroke-width="3"/>
+  <path d="M88,56 Q92,51 96,56" stroke-width="3"/>
   <!-- Orange Beak -->
-  <polygon points="75,56 85,56 80,63" fill="#F08A3C"/>
+  <polygon points="80,60 90,60 85,68" fill="#F08A3C"/>
   <!-- Rosy Cheeks -->
-  <ellipse cx="68" cy="58" rx="3.5" ry="2" fill="#F28B82"/>
-  <ellipse cx="92" cy="58" rx="3.5" ry="2" fill="#F28B82"/>
-  <!-- Flippers outstretched for balance -->
-  <path d="M50,75 Q32,82 40,94" fill="#2B2A28"/>
-  <path d="M110,75 Q128,82 120,94" fill="#2B2A28"/>
-  <!-- Feet -->
-  <ellipse cx="70" cy="126" rx="8" ry="4" fill="#F08A3C"/>
-  <ellipse cx="90" cy="126" rx="8" ry="4" fill="#F08A3C"/>
-  <!-- Skateboard Deck -->
-  <rect x="42" y="130" width="76" height="8" rx="4" fill="#8DB580" transform="rotate(-3 80 134)"/>
-  <!-- Skateboard Wheels -->
-  <circle cx="56" cy="144" r="5" fill="#E5533D"/>
-  <circle cx="104" cy="141" r="5" fill="#E5533D"/>
-  <!-- Motion Swoosh -->
-  <path d="M30,136 L38,136 M24,142 L34,142" stroke-dasharray="2 3"/>
+  <ellipse cx="71" cy="63" rx="4" ry="2.5" fill="#F28B82" stroke="none"/>
+  <ellipse cx="99" cy="63" rx="4" ry="2.5" fill="#F28B82" stroke="none"/>
+  <!-- Flippers Outstretched for Balance -->
+  <path d="M52,82 Q32,88 40,102" fill="#2B2A28"/>
+  <path d="M118,82 Q138,88 130,102" fill="#2B2A28"/>
+  <!-- Orange Feet -->
+  <ellipse cx="74" cy="132" rx="9" ry="5" fill="#F08A3C"/>
+  <ellipse cx="96" cy="132" rx="9" ry="5" fill="#F08A3C"/>
+  <!-- Curved Skateboard Deck -->
+  <rect x="44" y="138" width="82" height="9" rx="4.5" fill="#8DB580" transform="rotate(-3 85 142)"/>
+  <!-- Big Red Wheels -->
+  <circle cx="60" cy="154" r="6.5" fill="#E5533D"/>
+  <circle cx="112" cy="151" r="6.5" fill="#E5533D"/>
+  <!-- Motion speed dashes -->
+  <path d="M30,144 L40,144 M24,150 L36,150" stroke="#E5533D" stroke-width="2.5" stroke-dasharray="3 3"/>
 </svg>
