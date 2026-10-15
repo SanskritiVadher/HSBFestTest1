@@ -1,8 +1,17 @@
 import sqlite3
+import os
+import shutil
 from pathlib import Path
 
-# Database path relative to project root / backend directory
-DB_PATH = Path(__file__).parent.parent / "fest.db"
+# Database path: on Vercel serverless, root directory is read-only so use /tmp
+if os.environ.get("VERCEL"):
+    TMP_DIR = Path("/tmp")
+    DB_PATH = TMP_DIR / "fest.db"
+    ORIG_DB = Path(__file__).parent.parent / "fest.db"
+    if not DB_PATH.exists() and ORIG_DB.exists():
+        shutil.copy2(ORIG_DB, DB_PATH)
+else:
+    DB_PATH = Path(__file__).parent.parent / "fest.db"
 
 def get_db_connection() -> sqlite3.Connection:
     """Provide a sqlite3 connection configured with Row factory."""
